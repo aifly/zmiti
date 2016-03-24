@@ -120,6 +120,7 @@ window.addEventListener('load', function () {
             var cloudImg = new createjs.Bitmap('./static/images/c-center.png').set({ x: 180, y: 120 });
             cloudImg.scaleX = .8;
             cloudImg.scaleY = .8;
+            this.cloudImg = cloudImg;
 
             var shapeArr = [linearGradientRect1, linearGradientRect2, linearGradientRect3, z1, z1_1, z3, z3_1, z2, z2_1, zFill1, zFill2, zFill3, zFill4, zFill5, zFill6, line1, line2, cloudImg];
             var lineArr = [];
@@ -165,6 +166,9 @@ window.addEventListener('load', function () {
                 }, {
                     key: 'roll',
                     value: function roll() {
+                        if (!this.shape) {
+                            return;
+                        }
                         this.shape.x = this.shape.x + 1;
                         this.die();
                     }
@@ -174,6 +178,7 @@ window.addEventListener('load', function () {
                         if (this.shape.x >= this.hitX) {
                             centerContainer.removeChild(this.shape);
                             lineArr.shift();
+                            this.shape = null;
                         }
                     }
                 }]);
@@ -198,7 +203,9 @@ window.addEventListener('load', function () {
                 _createClass(Z2FlyLine, [{
                     key: 'roll',
                     value: function roll() {
-
+                        if (!this.shape) {
+                            return;
+                        }
                         this.shape.x = this.shape.x - 1;
                         this.shape.y = this.shape.y + 1;
                         this.die();
@@ -207,8 +214,8 @@ window.addEventListener('load', function () {
                     key: 'die',
                     value: function die() {
                         if (this.shape.y >= this.hitY) {
-
                             centerContainer.removeChild(this.shape);
+                            this.shape = null;
                         }
                     }
                 }]);
@@ -234,6 +241,7 @@ window.addEventListener('load', function () {
                         s.h = this.height;
                     };
                     image.src = s.src;
+                    this.image = image;
                     s.draw();
                 }
 
@@ -247,7 +255,10 @@ window.addEventListener('load', function () {
                 }, {
                     key: 'roll',
                     value: function roll() {
-
+                        if (!this.img) {
+                            return;
+                        }
+                        centerContainer.setChildIndex(this.img, centerContainer.getChildIndex(cloudImg) - 1);
                         if (this.img.x <= containerWidth - this.w && !this.back) {
                             this.img.x += 1;
                         } else {
@@ -257,6 +268,9 @@ window.addEventListener('load', function () {
                             this.img.y += .4;
                             if (this.img.y > 160) {
                                 centerContainer.removeChild(this.img);
+                                self.produce();
+                                this.img = null;
+                                this.image = null;
                             }
                         }
                     }
@@ -276,6 +290,10 @@ window.addEventListener('load', function () {
                 iNow1 = 0;
 
             function tick(evt) {
+                z1_1.dashCmd.offset += 1;
+                z2_1.dashCmd.offset += 1.47;
+                z3_1.dashCmd.offset += 1;
+
                 bit1.roll();
                 iNow++;
                 if (iNow % 50 === 0) {
@@ -292,12 +310,51 @@ window.addEventListener('load', function () {
                     lineArr[i].roll();
                 }
 
-                z1_1.dashCmd.offset += 1;
-                z2_1.dashCmd.offset += 1.47;
-                z3_1.dashCmd.offset += 1;
-
                 stage.update(evt);
             }
+        },
+        produce: function produce() {
+
+            createjs.MotionGuidePlugin.install(createjs.Tween);
+            //            stage.autoClear = true;
+            //this.cloudImg.regX = 215;
+            ///this.cloudImg.regY = 210;
+            createjs.Tween.get(this.cloudImg, { loop: false }, false).to({ rotation: 14 }, 400).to({ rotation: 0 }, 400).to({ rotation: -7 }, 200).to({ rotation: 0 }, 200);
+        },
+        loginAction: function loginAction() {},
+        sinLine: function sinLine() {
+            var option = arguments.length <= 0 || arguments[0] === undefined ? { isBack: false } : arguments[0];
+
+            var canvas = option.canvas,
+                isBack = option.isBack;
+
+            var context = canvas.getContext("2d"),
+                width = canvas.width,
+                height = canvas.height,
+                m = Math,
+                scale = 50,
+                ang = 0,
+                value = height * .6,
+                deg = m.ceil(width / m.PI * 4),
+                k = isBack ? -10 : 10;
+
+            var t = setInterval(function () {
+                ang += k;
+                context.clearRect(0, 0, width, height);
+                context.beginPath();
+                for (var i = 0; i < deg; i++) {
+                    context.lineTo(m.PI * i / 180 * scale, .3 * m.sin(m.PI * (i - ang) / 180) * scale / 2 + value);
+                }
+                context.stroke();
+                if (m.abs(ang) > width) {
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                    context.beginPath();
+                    context.moveTo(0, value);
+                    context.lineTo(width, value);
+                    context.stroke();
+                    clearInterval(t);
+                }
+            }, 18);
         },
         setSize: function setSize() {
             var height = arguments.length <= 0 || arguments[0] === undefined ? data.viewHeight : arguments[0];
