@@ -127,6 +127,10 @@
     var pwd = document.getElementById('password' ),
             login = document.getElementById('login' ),
             all =login.querySelectorAll('*');
+
+    for(var i  =0 ;i<all.length;i++){
+        all[i].classList.add('password')
+    }
     pwd.addEventListener('focus', function(){
         for(var i  =0 ;i<all.length;i++){
             all[i].classList.add('password')
