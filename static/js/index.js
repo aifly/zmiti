@@ -260,7 +260,7 @@ window.addEventListener('load', function () {
                         }
                         centerContainer.setChildIndex(this.img, centerContainer.getChildIndex(cloudImg) - 1);
                         if (this.img.x <= containerWidth - this.w && !this.back) {
-                            this.img.x += 1;
+                            this.img.x += .5;
                         } else {
                             //开始转弯
                             this.back = true;
