@@ -54,6 +54,11 @@ window.addEventListener('load', function () {
                 y: (size.height - containerHeight) / 2
             });
 
+            createjs.Touch.enable(stage);
+            stage.enableMouseOver(10);
+            stage.mouseEnabled = true;
+            stage.mouseMoveOutside = true; // keep tracking the mouse even when it leaves the canvas
+
             var z1 = new createjs.Shape();
             z1.graphics.beginFill(zColor).setStrokeStyle(5).beginStroke('#fff').drawRoundRect(0, 0, containerWidth, zHeight, borderRadius).endFill();
 
@@ -122,8 +127,14 @@ window.addEventListener('load', function () {
             cloudImg.scaleY = .8;
             this.cloudImg = cloudImg;
 
-            var shapeArr = [linearGradientRect1, linearGradientRect2, linearGradientRect3, z1, z1_1, z3, z3_1, z2, z2_1, zFill1, zFill2, zFill3, zFill4, zFill5, zFill6, line1, line2, cloudImg];
-            var lineArr = [];
+            var shapeArr = [linearGradientRect1, linearGradientRect2, linearGradientRect3, z1, z1_1, z3, z3_1, z2, z2_1, zFill1, zFill2, zFill3, zFill4, zFill5, zFill6, line1, line2, cloudImg],
+                lineArr = [],
+                componentsArr = [],
+                waitingComArr = [],
+                imgArr = ['a', 'v', 'i', 't', 'v1', 'z-ai', 'z-e', 'z-i', 'z-m', 'z-ps', 'z-t'];
+            imgArr = imgArr.map(function (item) {
+                return './static/images/' + item + '.png';
+            });
             shapeArr.forEach(function (item) {
                 centerContainer.addChild(item);
             });
@@ -170,6 +181,7 @@ window.addEventListener('load', function () {
                             return;
                         }
                         this.shape.x = this.shape.x + 1;
+
                         this.die();
                     }
                 }, {
@@ -190,6 +202,8 @@ window.addEventListener('load', function () {
                 _inherits(Z2FlyLine, _Z1FlyLine);
 
                 function Z2FlyLine(option) {
+                    var step = arguments.length <= 1 || arguments[1] === undefined ? 1 : arguments[1];
+
                     _classCallCheck(this, Z2FlyLine);
 
                     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Z2FlyLine).call(this, option));
@@ -197,6 +211,9 @@ window.addEventListener('load', function () {
                     var _ref3 = [].concat(_toConsumableArray(option));
 
                     _this.rotation = _ref3[0];
+
+                    _this.name = self.getGuid();
+                    _this.step = step;
                     return _this;
                 }
 
@@ -206,15 +223,26 @@ window.addEventListener('load', function () {
                         if (!this.shape) {
                             return;
                         }
-                        this.shape.x = this.shape.x - 1;
-                        this.shape.y = this.shape.y + 1;
+                        this.shape.x = this.shape.x - this.step;
+                        this.shape.y = this.shape.y + this.step;
+
                         this.die();
+                    }
+                }, {
+                    key: 'delLine',
+                    value: function delLine() {
+                        var _this2 = this;
+
+                        lineArr.forEach(function (line, i) {
+                            line.name === _this2.name && lineArr.splice(i, 1);
+                        });
                     }
                 }, {
                     key: 'die',
                     value: function die() {
                         if (this.shape.y >= this.hitY) {
                             centerContainer.removeChild(this.shape);
+                            this.delLine();
                             this.shape = null;
                         }
                     }
@@ -224,31 +252,55 @@ window.addEventListener('load', function () {
             }(Z1FlyLine);
 
             var Components = function () {
-                function Components() {
-                    var option = arguments.length <= 0 || arguments[0] === undefined ? { x: 0, y: 0 } : arguments[0];
-
+                function Components(option) {
                     _classCallCheck(this, Components);
 
                     var s = this;
                     s.src = option.img;
                     s.x = option.x;
                     s.y = option.y;
+                    s.scale = option.scale;
                     s.w = 0;
                     s.h = 0;
                     var image = new Image();
                     image.onload = function () {
-                        s.w = this.width;
-                        s.h = this.height;
+                        s.w = this.width * (s.scale || 1);
+                        s.h = this.height * (s.scale || 1);
                     };
                     image.src = s.src;
                     this.image = image;
+                    s.container = option.container || centerContainer;
                     s.draw();
                 }
 
                 _createClass(Components, [{
                     key: 'draw',
+                    value: function draw() {}
+                }, {
+                    key: 'roll',
+                    value: function roll() {}
+                }]);
+
+                return Components;
+            }();
+
+            var ProduceCom = function (_Components) {
+                _inherits(ProduceCom, _Components);
+
+                //加工的组件类。
+
+                function ProduceCom() {
+                    var option = arguments.length <= 0 || arguments[0] === undefined ? { x: 0, y: 0, scale: 1 } : arguments[0];
+
+                    _classCallCheck(this, ProduceCom);
+
+                    return _possibleConstructorReturn(this, Object.getPrototypeOf(ProduceCom).call(this, option));
+                }
+
+                _createClass(ProduceCom, [{
+                    key: 'draw',
                     value: function draw() {
-                        var img = new createjs.Bitmap(this.src).set({ x: this.x, y: this.y });
+                        var img = new createjs.Bitmap(this.src).set({ x: this.x, y: this.y, scale: 1 });
                         this.img = img;
                         centerContainer.addChildAt(img, centerContainer.getChildIndex(cloudImg) - 1);
                     }
@@ -276,12 +328,174 @@ window.addEventListener('load', function () {
                     }
                 }]);
 
-                return Components;
-            }();
+                return ProduceCom;
+            }(Components);
+
+            var WaittingForProduceCom = function (_Components2) {
+                _inherits(WaittingForProduceCom, _Components2);
+
+                function WaittingForProduceCom(option) {
+                    _classCallCheck(this, WaittingForProduceCom);
+
+                    var _this4 = _possibleConstructorReturn(this, Object.getPrototypeOf(WaittingForProduceCom).call(this, option));
+
+                    var s = _this4;
+
+
+                    /* s.x = s.left ? self.r(0, centerContainer.x) : self.r(centerContainer.x + containerWidth, data.viewWidth);
+                     s.y = self.r(0, data.viewHeight);*/
+                    var _ref4 = [self.r(120, 180), self.r(-.6, .6), self.r(-.6, .6), true, 0, false, self.getGuid(), 0];
+                    s.life = _ref4[0];
+                    s.speedX = _ref4[1];
+                    s.speedY = _ref4[2];
+                    s.start = _ref4[3];
+                    s.iNow = _ref4[4];
+                    s.canMove = _ref4[5];
+                    s.name = _ref4[6];
+                    s.angle = _ref4[7];
+                    return _this4;
+                }
+
+                _createClass(WaittingForProduceCom, [{
+                    key: 'starting',
+                    value: function starting() {
+
+                        this.start = true;
+                    }
+                }, {
+                    key: 'stop',
+                    value: function stop() {
+                        this.start = false;
+                    }
+                }, {
+                    key: 'draw',
+                    value: function draw() {
+                        var _this5 = this;
+
+                        var bitMap = new createjs.Bitmap(this.src).set({
+                            x: this.x,
+                            y: this.y,
+                            scaleX: this.scale,
+                            scaleY: this.scale
+                        });
+                        bitMap.cursor = 'pointer';
+                        this.img = bitMap;
+                        bitMap.on("mousedown", function (e) {
+                            _this5.stop();
+                            _this5.canMove = true;
+                        });
+                        bitMap.on('pressmove', function (e) {
+                            if (_this5.canMove) {
+
+                                if (!_this5.one && bitMap.x + _this5.w > centerContainer.x && bitMap.x < centerContainer.x + zHeight && bitMap.y + _this5.h > centerContainer.y - 20 && bitMap.y < centerContainer.y + zHeight) {
+                                    // self.comDanger(bitMap,stage);
+
+                                }
+
+                                var x = e.stageX - _this5.w / 2,
+                                    y = e.stageY - _this5.h / 2;
+                                x < 0 && (x = 0);
+                                y <= 0 && (y = 0);
+                                x > data.viewWidth - _this5.w / 2 && (x = data.viewWidth - _this5.w);
+                                y > data.viewHeight - _this5.h / 2 && (y = data.viewHeight - _this5.h);
+                                _this5.img.x = x;
+                                _this5.img.y = y;
+                            }
+                        });
+                        bitMap.on("rollover", function (e) {
+                            //鼠标移动到图片上面触发
+
+                            _this5.stop();
+                            bitMap.scaleX += .2;
+                            bitMap.scaleY += .2;
+                        });
+                        bitMap.on("rollout", function (e) {
+                            bitMap.scaleX -= .2;
+                            bitMap.scaleY -= .2;
+                            _this5.starting();
+                            if (!_this5.canMove) return;
+                            if (bitMap.x + _this5.w > centerContainer.x && bitMap.x < centerContainer.x + zHeight && bitMap.y + _this5.h > centerContainer.y - 20 && bitMap.y < centerContainer.y + zHeight) {
+                                componentsArr.push(new ProduceCom({ img: _this5.src, x: 0, y: (zHeight - _this5.h) / 2, scale: 1 }));
+                                _this5.stop();
+                                _this5.die(bitMap);
+                            } else {
+                                _this5.canMove = false;
+                                _this5.one = false;
+                            }
+                        });
+                        stage.addChild(bitMap);
+                    }
+                }, {
+                    key: 'die',
+                    value: function die(img) {
+                        //死亡
+                        waitingComArr.forEach(function (com, i) {
+                            com.name = img.name && waitingComArr.splice(i, 1);
+                        });
+                        stage.removeChild(img);
+                        this.img = null;
+                    }
+                }, {
+                    key: 'roll',
+                    value: function roll() {
+
+                        var s = this;
+                        if (!s.img) return;
+
+                        if (s.start) {
+
+                            s.img.x += s.speedX;
+                            s.img.y += s.speedY;
+
+                            s.img.x <= 0 && (s.speedX *= -1);
+                            s.img.y <= 0 && (s.speedY *= -1);
+                            s.img.y >= data.viewHeight - 100 && (s.speedY *= -1);
+
+                            s.img.x > data.viewWidth - 100 && (s.speedX *= -1);
+
+                            s.iNow++;
+                            if (s.iNow >= s.life) {
+                                s.life = self.r(s.life, s.life + 150);
+                                s.iNow = 0;
+                                self.r(-1, 1) > 0 && (s.speedX *= -1);
+                                self.r(-1, 1) > 0 && (s.speedY *= -1);
+                            }
+                        }
+                    }
+                }]);
+
+                return WaittingForProduceCom;
+            }(Components);
 
             stage.addChild(centerContainer);
 
-            var bit1 = new Components({ img: './static/images/i.png', x: 0, y: 5 });
+            var min = 0,
+                maxW = centerContainer.x,
+                maxH = data.viewHeight - 100;
+            for (var i = 0; i < 15; i++) {
+                if (i % 2 === 1) {
+                    min = containerWidth + containerWidth;
+                    maxW = data.viewWidth - 100;
+                } else {
+                    min = 0;
+                    maxW = centerContainer.x;
+                }
+                waitingComArr.push(new WaittingForProduceCom({
+                    img: imgArr[Math.floor(self.r(0, imgArr.length))],
+                    x: self.r(min, maxW),
+                    y: self.r(0, maxH),
+                    scale: .8
+                }));
+            }
+
+            for (var i = 10; i >= 0; i--) {
+
+                lineArr.push(new Z1FlyLine([borderRadius * (i + 1), 4, zHeight - 8, containerWidth - 85 - borderRadius * (i + 1)]));
+                lineArr.push(new Z1FlyLine([borderRadius * (i + 1) + 20, z3.y + 5, zHeight - 8, containerWidth - 58 - borderRadius * (i + 1) + 20, 4, '', '', '', centerContainer.getChildIndex(z2) - 1]));
+            }
+            for (var k = 0; k < 16; k++) {
+                lineArr.push(new Z2FlyLine([363 - 13 * k * 4, 374 + 12 * k / 25, zHeight - 4, 0, z3.y - 34 * k, '', '', '', centerContainer.getChildIndex(cloudImg) - 1, -45]));
+            }
 
             createjs.Ticker.timingMode = createjs.Ticker.RAF;
             createjs.Ticker.on("tick", tick, this);
@@ -294,7 +508,17 @@ window.addEventListener('load', function () {
                 z2_1.dashCmd.offset += 1.47;
                 z3_1.dashCmd.offset += 1;
 
-                bit1.roll();
+                componentsArr.forEach(function (c) {
+                    return c.roll();
+                });
+                waitingComArr.forEach(function (c) {
+                    return c.roll();
+                });
+
+                lineArr.forEach(function (item) {
+                    return item.roll();
+                });
+
                 iNow++;
                 if (iNow % 50 === 0) {
                     iNow = 0;
@@ -303,25 +527,81 @@ window.addEventListener('load', function () {
                 }
                 iNow1++;
                 if (iNow1 % 35 === 0) {
-                    iNow1 = 0;
-                    lineArr.push(new Z2FlyLine([363, 376, zHeight - 4, z3.x, z3.y, '', '', null, centerContainer.getChildIndex(cloudImg) - 1, -45]));
+                    //iNow1 = 0;
+                    if (iNow1 === 35) {
+                        this.line = this.line || new Z2FlyLine([363, 376, zHeight - 4, 0, z3.y, '', '', '', centerContainer.getChildIndex(cloudImg) - 1, -45], 1.03);
+                        lineArr.push(this.line);
+                    } else {
+                        iNow1 = 70;
+                        lineArr.push(new Z2FlyLine([363, 376, zHeight - 4, 0, z3.y, '', '', null, centerContainer.getChildIndex(cloudImg) - 1, -45]));
+                    }
                 }
-                for (var i = 0; i < lineArr.length; i++) {
-                    lineArr[i].roll();
-                }
-
                 stage.update(evt);
             }
         },
-        produce: function produce() {
+        comDanger: function comDanger(bmp, stage) {
+            var _this6 = this;
 
+            bmp.show = bmp.show || 123;
+            if (bmp.show === 123) {
+                var tween;
+
+                (function () {
+                    bmp.show = 1;
+                    bmp.sourceRect = new createjs.Rectangle(0, 0, 125, 192);
+                    bmp = bmp.clone();
+                    //bmp.x += 230;
+                    var filters = [new createjs.BlurFilter(16, 16, 2)];
+                    var fx = _this6.getFXBitmap(bmp, filters, 0, 0, 125, 192);
+                    tween = createjs.Tween.get(fx, { loop: true }).to({ alpha: 1 }, 2500).wait(1000).to({ alpha: 0 }, 2500);
+
+
+                    tween.on("change", function () {
+                        bmp.alpha = 1 - Math.pow(fx.alpha, 3);
+                    });
+                    stage.addChild(bmp, fx);
+                })();
+            }
+        },
+        getFXBitmap: function getFXBitmap(source, filters, x, y, w, h) {
+            // cache the source, so we can grab a rasterized image of it:
+            source.cache(x, y, w, h);
+
+            // create a new Bitmap, using the source's cacheCanvas:
+            var bmp = new createjs.Bitmap(source.cacheCanvas);
+
+            // add the filters, and cache to apply them
+            bmp.filters = filters;
+            bmp.cache(0, 0, w, h);
+
+            // offset the bmp's registration to account for the cache offset:
+            bmp.regX = -x;
+            bmp.regY = -y;
+            bmp.x = source.x;
+            bmp.y = source.y;
+            bmp.alpha = 0;
+
+            // uncache the source:
+            source.uncache();
+
+            return bmp;
+        },
+        produce: function produce() {
+            //开始加工...
             createjs.MotionGuidePlugin.install(createjs.Tween);
-            //            stage.autoClear = true;
-            //this.cloudImg.regX = 215;
-            ///this.cloudImg.regY = 210;
             createjs.Tween.get(this.cloudImg, { loop: false }, false).to({ rotation: 14 }, 400).to({ rotation: 0 }, 400).to({ rotation: -7 }, 200).to({ rotation: 0 }, 200);
         },
+        r: function r(min, max) {
+            return min + (max - min) * Math.random();
+        },
         loginAction: function loginAction() {},
+        getGuid: function getGuid() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                var r = Math.random() * 16 | 0,
+                    v = c == 'x' ? r : r & 0x3 | 0x8;
+                return v.toString(16);
+            });
+        },
         sinLine: function sinLine() {
             var option = arguments.length <= 0 || arguments[0] === undefined ? { isBack: false } : arguments[0];
 
