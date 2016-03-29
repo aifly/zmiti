@@ -472,7 +472,7 @@ window.addEventListener('load', function () {
             var min = 0,
                 maxW = centerContainer.x,
                 maxH = data.viewHeight - 100;
-            for (var i = 0; i < 15; i++) {
+            for (var i = 0; i < imgArr.length; i++) {
                 if (i % 2 === 1) {
                     min = containerWidth + containerWidth;
                     maxW = data.viewWidth - 100;
@@ -481,7 +481,7 @@ window.addEventListener('load', function () {
                     maxW = centerContainer.x;
                 }
                 waitingComArr.push(new WaittingForProduceCom({
-                    img: imgArr[Math.floor(self.r(0, imgArr.length))],
+                    img: imgArr[i],
                     x: self.r(min, maxW),
                     y: self.r(0, maxH),
                     scale: .8
