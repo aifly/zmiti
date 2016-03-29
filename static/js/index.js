@@ -311,7 +311,7 @@ window.addEventListener('load', function () {
                             return;
                         }
                         centerContainer.setChildIndex(this.img, centerContainer.getChildIndex(cloudImg) - 1);
-                        if (this.img.x <= containerWidth - this.w && !this.back) {
+                        if (this.img.x <= containerWidth - 10 - this.w && !this.back) {
                             this.img.x += .5;
                         } else {
                             //开始转弯
@@ -353,6 +353,7 @@ window.addEventListener('load', function () {
                     s.canMove = _ref4[5];
                     s.name = _ref4[6];
                     s.angle = _ref4[7];
+                    s.left = s.x <= centerContainer.x;
                     return _this4;
                 }
 
@@ -415,7 +416,26 @@ window.addEventListener('load', function () {
                             _this5.starting();
                             if (!_this5.canMove) return;
                             if (bitMap.x + _this5.w > centerContainer.x && bitMap.x < centerContainer.x + zHeight && bitMap.y + _this5.h > centerContainer.y - 20 && bitMap.y < centerContainer.y + zHeight) {
-                                componentsArr.push(new ProduceCom({ img: _this5.src, x: 0, y: (zHeight - _this5.h) / 2, scale: 1 }));
+                                componentsArr.push(new ProduceCom({
+                                    img: _this5.src,
+                                    x: 0,
+                                    y: (zHeight - 10 - _this5.h) / 2,
+                                    scale: 1
+                                }));
+                                if (!_this5.left) {
+                                    min = containerWidth + containerWidth;
+                                    maxW = data.viewWidth - 100;
+                                } else {
+                                    min = 0;
+                                    maxW = centerContainer.x;
+                                }
+
+                                waitingComArr.push(new WaittingForProduceCom({
+                                    img: _this5.src,
+                                    x: self.r(min, maxW),
+                                    y: self.r(0, maxH),
+                                    scale: .8
+                                }));
                                 _this5.stop();
                                 _this5.die(bitMap);
                             } else {
