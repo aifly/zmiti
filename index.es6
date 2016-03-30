@@ -12,6 +12,14 @@ window.addEventListener('load', ()=> {
         main: $('#fly-main'),
         header: $('.fly-header'),
         canvas: $('#fly-stage')[0],
+        userCanvas:$("#canvas")[0],
+        pwdCanvas:$("#canvas-pwd")[0],
+        username:$("input[name='username']"),
+        password:$('input[name="pwd"]'),
+        login:$('#login'),
+        loginMask:$("#fly-main .fly-login-mask"),
+        loginBtn:$(".btn-login"),
+        btnOK:$('#fly-main .login-btn span'),
         animationEnd: 'onwebkitanimationend' in window ? 'webkitAnimationEnd' : 'animationend',
         transitionEnd: 'onwebkittransitionend' in window ? 'webkitTransitionEnd' : 'transitionend'
     };
@@ -36,9 +44,9 @@ window.addEventListener('load', ()=> {
                     y: (size.height - containerHeight) / 2
                 });
 
-            createjs.Touch.enable(stage);
+            //createjs.Touch.enable(stage);
             stage.enableMouseOver(10);
-            stage.mouseEnabled = true;
+            //stage.mouseEnabled = true;
             stage.mouseMoveOutside = true; // keep tracking the mouse even when it leaves the canvas
 
             let z1 = new createjs.Shape();
@@ -111,8 +119,26 @@ window.addEventListener('load', ()=> {
             cloudImg.scaleY = .8;
             this.cloudImg = cloudImg;
 
+            let devicePc = new createjs.Bitmap('./static/images/pc.png').set({
+                scaleX: .7,
+                scaleY: .7,
+                y: z3.y + 15,
+                x: containerWidth / 5
+            });
+            let deviceMobile = new createjs.Bitmap('./static/images/mobile.png').set({
+                scaleX: 1,
+                scaleY: 1,
+                y: z3.y + 20,
+                x: containerWidth / 2
+            });
+            let devicePad = new createjs.Bitmap('./static/images/pad.png').set({
+                scaleX: .7,
+                scaleY: .7,
+                y: z3.y + 20,
+                x: containerWidth / 1.5
+            });
 
-            let shapeArr = [linearGradientRect1, linearGradientRect2, linearGradientRect3, z1, z1_1, z3, z3_1, z2, z2_1, zFill1, zFill2, zFill3, zFill4, zFill5, zFill6, line1, line2, cloudImg],
+            let shapeArr = [linearGradientRect1, linearGradientRect2, linearGradientRect3, z1, z1_1, z3, z3_1, z2, z2_1, zFill1, zFill2, zFill3, zFill4, zFill5, zFill6, line1, line2, cloudImg, devicePc, deviceMobile, devicePad],
                 lineArr = [],
                 componentsArr = [],
                 waitingComArr = [],
@@ -123,6 +149,43 @@ window.addEventListener('load', ()=> {
             shapeArr.forEach(item=> {
                 centerContainer.addChild(item);
             });
+
+            class Cueline {//提示线。
+                constructor(option = {}) {
+                    let s = this;
+                    //   [s.endX, s.endY] = [option.endX, option.endY];
+                    s.draw();
+                }
+
+                draw() {
+                    let container = new createjs.Container();
+
+                    let line = new createjs.Shape();
+                    line.graphics.setStrokeStyle(1).beginStroke("#f90").moveTo(containerWidth / 2 + 20, containerHeight / 2 - 20).lineTo(containerWidth / 3.5, devicePc.y).endFill();
+
+
+                    let line1 = new createjs.Shape();
+                    line1.graphics.setStrokeStyle(1).beginStroke("#f90").moveTo(containerWidth / 2 + 20, containerHeight / 2 - 20).lineTo(containerWidth / 1.9, deviceMobile.y).endFill();
+
+                    let line2 = new createjs.Shape();
+                    line2.graphics.setStrokeStyle(1).beginStroke("#f90").moveTo(containerWidth / 2 + 20, containerHeight / 2 - 20).lineTo(containerWidth / 1.4, devicePad.y).endFill();
+
+                    container.addChild(line, line1, line2);
+                    this.container = container;
+                    this.container.visible = false;
+                    centerContainer.addChild(container);
+                }
+
+                show() {
+                    this.container.visible = true;
+                }
+
+                hide() {
+                    this.container.visible = false;
+                }
+            }
+
+            self.cueLine =  new Cueline();
 
             class Z1FlyLine {
                 constructor(option) {
@@ -282,6 +345,8 @@ window.addEventListener('load', ()=> {
                         scaleX: this.scale,
                         scaleY: this.scale
                     });
+
+
                     bitMap.cursor = 'pointer';
                     this.img = bitMap;
                     bitMap.on("mousedown", e=> {
@@ -397,12 +462,12 @@ window.addEventListener('load', ()=> {
                 }
             }
 
-            stage.addChild(centerContainer);
 
+
+            stage.addChild(centerContainer);
 
             let min = 0,
                 maxW = centerContainer.x,
-
                 maxH = data.viewHeight - 100;
             for (let i = 0; i < imgArr.length; i++) {
                 if (i % 2 === 1) {
@@ -469,7 +534,44 @@ window.addEventListener('load', ()=> {
                 }
                 stage.update(evt);
             }
+
+          //  self.loginAction();
+            self.domInit();
         },
+
+        domInit(){
+
+
+            data.btnOK.on('mousedown',(e)=>{
+                $(e.target).addClass("shadow");
+
+            }).on('mouseup',(e)=>{
+                $(e.target).removeClass("shadow").addClass("hide").parent().find('.loading').addClass("show");
+            });
+
+
+            data.loginBtn.on("click",()=>{
+                data.loginMask.addClass('show');
+
+                data.loginBtn[0].btn = data.loginBtn[0].btn || 1;
+
+                if(data.loginBtn[0].btn === 1){
+                    data.loginBtn[0].btn = 2;
+                    this.loginAction();
+
+                }
+            });
+
+            $(".close").on('click',()=>{
+               data.loginMask.removeClass('show');
+            });
+
+            $(document).on('keydown',e=>{
+                e.keyCode === 27 &&  data.loginMask.removeClass('show');
+            });
+
+        },
+
         comDanger(bmp, stage){
             bmp.show = bmp.show || 123;
             if (bmp.show === 123) {
@@ -514,12 +616,14 @@ window.addEventListener('load', ()=> {
             return bmp;
         },
         produce(){//开始加工...
+            let self = this;
+            self.cueLine.show();
             createjs.MotionGuidePlugin.install(createjs.Tween);
             createjs.Tween.get(this.cloudImg, {loop: false}, false)
                 .to({rotation: 14}, 400)
                 .to({rotation: 0}, 400)
                 .to({rotation: -7}, 200)
-                .to({rotation: 0}, 200);
+                .to({rotation: 0}, 200).call(e=>self.cueLine.hide());
         },
 
         r(min, max){
@@ -527,7 +631,55 @@ window.addEventListener('load', ()=> {
         },
 
         loginAction(){
+            let  all =data.login.find("*");
+            let aSpan = $('.input-box .placeholder');
+            data.username.on("focus",()=>{
+                if(data.username.val().length<=0){
+                    aSpan.eq(0).css('transform','scale(.8) translate(-10px,-30px)');
+                    this.sinLine({
+                        canvas:data.userCanvas,
+                        input:data.username
+                    })
+                }
 
+            }).on('blur',()=>{
+                if(data.username.val().length<=0){
+                    aSpan.eq(0).css('transform','scale(1) translate(0,0)');
+                    this.sinLine({
+
+                        canvas:data.userCanvas,
+                        input:data.username,
+                        isBack:true
+                    })
+                }
+            });
+
+            data.password.on("focus",()=>{
+                if(data.password.val().length<=0){
+                    aSpan.eq(1).css('transform','scale(.8) translate(-10px,-30px)');
+                    this.sinLine({
+                        canvas:data.pwdCanvas,
+                        input:data.password
+                    })
+                }
+                all.each((i,n)=>{
+                    $(n).addClass("password")
+                })
+
+            }).on('blur',()=>{
+                all.each((i,n)=>{
+                    $(n).removeClass("password")
+                })
+
+                if(data.password.val().length<=0){
+                    aSpan.eq(1).css('transform','scale(1) translate(0,0)');
+                    this.sinLine({
+                        canvas:data.pwdCanvas,
+                        input:data.password,
+                        isBack:true
+                    })
+                }
+            });
         },
 
         getGuid(){
@@ -539,8 +691,10 @@ window.addEventListener('load', ()=> {
 
         sinLine(option = {isBack: false}){
             let canvas = option.canvas,
-                isBack = option.isBack;
+                isBack = option.isBack,
+                input = option.input;
 
+            canvas.width = $(canvas).parent().width();
             let context = canvas.getContext("2d"),
                 width = canvas.width,
                 height = canvas.height,
@@ -550,7 +704,7 @@ window.addEventListener('load', ()=> {
                 value = height * .6,
                 deg = m.ceil(width / m.PI * 4),
                 k = isBack ? -10 : 10;
-
+            input.css("borderBottom",'none');
             let t = setInterval(function () {
                 ang += k;
                 context.clearRect(0, 0, width, height);
@@ -575,6 +729,8 @@ window.addEventListener('load', ()=> {
             data.main.height(height - data.header.height());
             data.canvas.width = width;
             data.canvas.height = height - data.header.height();
+
+            data.login.css({top:$('.fly-login-box').offset().top-data.login.height()-$('.fly-header').height()+10})
 
             return {width, height};
         },

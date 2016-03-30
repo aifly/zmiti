@@ -24,6 +24,14 @@ window.addEventListener('load', function () {
         main: $('#fly-main'),
         header: $('.fly-header'),
         canvas: $('#fly-stage')[0],
+        userCanvas: $("#canvas")[0],
+        pwdCanvas: $("#canvas-pwd")[0],
+        username: $("input[name='username']"),
+        password: $('input[name="pwd"]'),
+        login: $('#login'),
+        loginMask: $("#fly-main .fly-login-mask"),
+        loginBtn: $(".btn-login"),
+        btnOK: $('#fly-main .login-btn span'),
         animationEnd: 'onwebkitanimationend' in window ? 'webkitAnimationEnd' : 'animationend',
         transitionEnd: 'onwebkittransitionend' in window ? 'webkitTransitionEnd' : 'transitionend'
     };
@@ -54,9 +62,9 @@ window.addEventListener('load', function () {
                 y: (size.height - containerHeight) / 2
             });
 
-            createjs.Touch.enable(stage);
+            //createjs.Touch.enable(stage);
             stage.enableMouseOver(10);
-            stage.mouseEnabled = true;
+            //stage.mouseEnabled = true;
             stage.mouseMoveOutside = true; // keep tracking the mouse even when it leaves the canvas
 
             var z1 = new createjs.Shape();
@@ -127,7 +135,26 @@ window.addEventListener('load', function () {
             cloudImg.scaleY = .8;
             this.cloudImg = cloudImg;
 
-            var shapeArr = [linearGradientRect1, linearGradientRect2, linearGradientRect3, z1, z1_1, z3, z3_1, z2, z2_1, zFill1, zFill2, zFill3, zFill4, zFill5, zFill6, line1, line2, cloudImg],
+            var devicePc = new createjs.Bitmap('./static/images/pc.png').set({
+                scaleX: .7,
+                scaleY: .7,
+                y: z3.y + 15,
+                x: containerWidth / 5
+            });
+            var deviceMobile = new createjs.Bitmap('./static/images/mobile.png').set({
+                scaleX: 1,
+                scaleY: 1,
+                y: z3.y + 20,
+                x: containerWidth / 2
+            });
+            var devicePad = new createjs.Bitmap('./static/images/pad.png').set({
+                scaleX: .7,
+                scaleY: .7,
+                y: z3.y + 20,
+                x: containerWidth / 1.5
+            });
+
+            var shapeArr = [linearGradientRect1, linearGradientRect2, linearGradientRect3, z1, z1_1, z3, z3_1, z2, z2_1, zFill1, zFill2, zFill3, zFill4, zFill5, zFill6, line1, line2, cloudImg, devicePc, deviceMobile, devicePad],
                 lineArr = [],
                 componentsArr = [],
                 waitingComArr = [],
@@ -138,6 +165,55 @@ window.addEventListener('load', function () {
             shapeArr.forEach(function (item) {
                 centerContainer.addChild(item);
             });
+
+            var Cueline = function () {
+                //提示线。
+
+                function Cueline() {
+                    var option = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+                    _classCallCheck(this, Cueline);
+
+                    var s = this;
+                    //   [s.endX, s.endY] = [option.endX, option.endY];
+                    s.draw();
+                }
+
+                _createClass(Cueline, [{
+                    key: 'draw',
+                    value: function draw() {
+                        var container = new createjs.Container();
+
+                        var line = new createjs.Shape();
+                        line.graphics.setStrokeStyle(1).beginStroke("#f90").moveTo(containerWidth / 2 + 20, containerHeight / 2 - 20).lineTo(containerWidth / 3.5, devicePc.y).endFill();
+
+                        var line1 = new createjs.Shape();
+                        line1.graphics.setStrokeStyle(1).beginStroke("#f90").moveTo(containerWidth / 2 + 20, containerHeight / 2 - 20).lineTo(containerWidth / 1.9, deviceMobile.y).endFill();
+
+                        var line2 = new createjs.Shape();
+                        line2.graphics.setStrokeStyle(1).beginStroke("#f90").moveTo(containerWidth / 2 + 20, containerHeight / 2 - 20).lineTo(containerWidth / 1.4, devicePad.y).endFill();
+
+                        container.addChild(line, line1, line2);
+                        this.container = container;
+                        this.container.visible = false;
+                        centerContainer.addChild(container);
+                    }
+                }, {
+                    key: 'show',
+                    value: function show() {
+                        this.container.visible = true;
+                    }
+                }, {
+                    key: 'hide',
+                    value: function hide() {
+                        this.container.visible = false;
+                    }
+                }]);
+
+                return Cueline;
+            }();
+
+            self.cueLine = new Cueline();
 
             var Z1FlyLine = function () {
                 function Z1FlyLine(option) {
@@ -379,6 +455,7 @@ window.addEventListener('load', function () {
                             scaleX: this.scale,
                             scaleY: this.scale
                         });
+
                         bitMap.cursor = 'pointer';
                         this.img = bitMap;
                         bitMap.on("mousedown", function (e) {
@@ -508,10 +585,10 @@ window.addEventListener('load', function () {
                 }));
             }
 
-            for (var i = 10; i >= 0; i--) {
+            for (var _i = 10; _i >= 0; _i--) {
 
-                lineArr.push(new Z1FlyLine([borderRadius * (i + 1), 4, zHeight - 8, containerWidth - 85 - borderRadius * (i + 1)]));
-                lineArr.push(new Z1FlyLine([borderRadius * (i + 1) + 20, z3.y + 5, zHeight - 8, containerWidth - 58 - borderRadius * (i + 1) + 20, 4, '', '', '', centerContainer.getChildIndex(z2) - 1]));
+                lineArr.push(new Z1FlyLine([borderRadius * (_i + 1), 4, zHeight - 8, containerWidth - 85 - borderRadius * (_i + 1)]));
+                lineArr.push(new Z1FlyLine([borderRadius * (_i + 1) + 20, z3.y + 5, zHeight - 8, containerWidth - 58 - borderRadius * (_i + 1) + 20, 4, '', '', '', centerContainer.getChildIndex(z2) - 1]));
             }
             for (var k = 0; k < 16; k++) {
                 lineArr.push(new Z2FlyLine([363 - 13 * k * 4, 374 + 12 * k / 25, zHeight - 4, 0, z3.y - 34 * k, '', '', '', centerContainer.getChildIndex(cloudImg) - 1, -45]));
@@ -558,9 +635,40 @@ window.addEventListener('load', function () {
                 }
                 stage.update(evt);
             }
+
+            //  self.loginAction();
+            self.domInit();
+        },
+        domInit: function domInit() {
+            var _this6 = this;
+
+            data.btnOK.on('mousedown', function (e) {
+                $(e.target).addClass("shadow");
+            }).on('mouseup', function (e) {
+                $(e.target).removeClass("shadow").addClass("hide").parent().find('.loading').addClass("show");
+            });
+
+            data.loginBtn.on("click", function () {
+                data.loginMask.addClass('show');
+
+                data.loginBtn[0].btn = data.loginBtn[0].btn || 1;
+
+                if (data.loginBtn[0].btn === 1) {
+                    data.loginBtn[0].btn = 2;
+                    _this6.loginAction();
+                }
+            });
+
+            $(".close").on('click', function () {
+                data.loginMask.removeClass('show');
+            });
+
+            $(document).on('keydown', function (e) {
+                e.keyCode === 27 && data.loginMask.removeClass('show');
+            });
         },
         comDanger: function comDanger(bmp, stage) {
-            var _this6 = this;
+            var _this7 = this;
 
             bmp.show = bmp.show || 123;
             if (bmp.show === 123) {
@@ -572,7 +680,7 @@ window.addEventListener('load', function () {
                     bmp = bmp.clone();
                     //bmp.x += 230;
                     var filters = [new createjs.BlurFilter(16, 16, 2)];
-                    var fx = _this6.getFXBitmap(bmp, filters, 0, 0, 125, 192);
+                    var fx = _this7.getFXBitmap(bmp, filters, 0, 0, 125, 192);
                     tween = createjs.Tween.get(fx, { loop: true }).to({ alpha: 1 }, 2500).wait(1000).to({ alpha: 0 }, 2500);
 
 
@@ -608,13 +716,67 @@ window.addEventListener('load', function () {
         },
         produce: function produce() {
             //开始加工...
+            var self = this;
+            self.cueLine.show();
             createjs.MotionGuidePlugin.install(createjs.Tween);
-            createjs.Tween.get(this.cloudImg, { loop: false }, false).to({ rotation: 14 }, 400).to({ rotation: 0 }, 400).to({ rotation: -7 }, 200).to({ rotation: 0 }, 200);
+            createjs.Tween.get(this.cloudImg, { loop: false }, false).to({ rotation: 14 }, 400).to({ rotation: 0 }, 400).to({ rotation: -7 }, 200).to({ rotation: 0 }, 200).call(function (e) {
+                return self.cueLine.hide();
+            });
         },
         r: function r(min, max) {
             return min + (max - min) * Math.random();
         },
-        loginAction: function loginAction() {},
+        loginAction: function loginAction() {
+            var _this8 = this;
+
+            var all = data.login.find("*");
+            var aSpan = $('.input-box .placeholder');
+            data.username.on("focus", function () {
+                if (data.username.val().length <= 0) {
+                    aSpan.eq(0).css('transform', 'scale(.8) translate(-10px,-30px)');
+                    _this8.sinLine({
+                        canvas: data.userCanvas,
+                        input: data.username
+                    });
+                }
+            }).on('blur', function () {
+                if (data.username.val().length <= 0) {
+                    aSpan.eq(0).css('transform', 'scale(1) translate(0,0)');
+                    _this8.sinLine({
+
+                        canvas: data.userCanvas,
+                        input: data.username,
+                        isBack: true
+                    });
+                }
+            });
+
+            data.password.on("focus", function () {
+                if (data.password.val().length <= 0) {
+                    aSpan.eq(1).css('transform', 'scale(.8) translate(-10px,-30px)');
+                    _this8.sinLine({
+                        canvas: data.pwdCanvas,
+                        input: data.password
+                    });
+                }
+                all.each(function (i, n) {
+                    $(n).addClass("password");
+                });
+            }).on('blur', function () {
+                all.each(function (i, n) {
+                    $(n).removeClass("password");
+                });
+
+                if (data.password.val().length <= 0) {
+                    aSpan.eq(1).css('transform', 'scale(1) translate(0,0)');
+                    _this8.sinLine({
+                        canvas: data.pwdCanvas,
+                        input: data.password,
+                        isBack: true
+                    });
+                }
+            });
+        },
         getGuid: function getGuid() {
             return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
                 var r = Math.random() * 16 | 0,
@@ -626,8 +788,10 @@ window.addEventListener('load', function () {
             var option = arguments.length <= 0 || arguments[0] === undefined ? { isBack: false } : arguments[0];
 
             var canvas = option.canvas,
-                isBack = option.isBack;
+                isBack = option.isBack,
+                input = option.input;
 
+            canvas.width = $(canvas).parent().width();
             var context = canvas.getContext("2d"),
                 width = canvas.width,
                 height = canvas.height,
@@ -637,7 +801,7 @@ window.addEventListener('load', function () {
                 value = height * .6,
                 deg = m.ceil(width / m.PI * 4),
                 k = isBack ? -10 : 10;
-
+            input.css("borderBottom", 'none');
             var t = setInterval(function () {
                 ang += k;
                 context.clearRect(0, 0, width, height);
@@ -664,6 +828,8 @@ window.addEventListener('load', function () {
             data.main.height(height - data.header.height());
             data.canvas.width = width;
             data.canvas.height = height - data.header.height();
+
+            data.login.css({ top: $('.fly-login-box').offset().top - data.login.height() - $('.fly-header').height() + 10 });
 
             return { width: width, height: height };
         },
