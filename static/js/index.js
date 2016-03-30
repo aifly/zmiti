@@ -32,6 +32,7 @@ window.addEventListener('load', function () {
         loginMask: $("#fly-main .fly-login-mask"),
         loginBtn: $(".btn-login"),
         btnOK: $('#fly-main .login-btn span'),
+        rayen: $(".button--rayen"),
         animationEnd: 'onwebkitanimationend' in window ? 'webkitAnimationEnd' : 'animationend',
         transitionEnd: 'onwebkittransitionend' in window ? 'webkitTransitionEnd' : 'transitionend'
     };
@@ -831,6 +832,7 @@ window.addEventListener('load', function () {
 
             data.login.css({ top: $('.fly-login-box').offset().top - data.login.height() - $('.fly-header').height() + 10 });
 
+            data.rayen.css({ marginTop: (data.header.height() - 30) / 2 });
             return { width: width, height: height };
         },
         setDefault: function setDefault() {
