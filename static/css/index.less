@@ -98,6 +98,18 @@ input, textarea {
   animation: @value;
 }
 
+.fly-h-gradient-line{
+  background: -webkit-gradient(linear, left top, right top, from(rgba(204, 204, 204, .2)), color-stop(0.5, rgba(204, 204, 204, 1)), to(rgba(204, 204, 204, .2)));
+  background: -moz-linear-gradient(left, rgba(204, 204, 204, .2), rgba(204, 204, 204, 1) 50%, rgba(204, 204, 204, .2));
+  background: -ms-linear-gradient(left, rgba(204, 204, 204, .2), rgba(204, 204, 204, 1) 50%, rgba(204, 204, 204, .2));
+}
+
+.fly-v-gradient-line(@minOpacity:.2,@maxOpacity:1){
+  background: -webkit-gradient(linear, left top, left bottom, from(rgba(204, 204, 204, @minOpacity)), color-stop(0.5, rgba(204, 204, 204, @maxOpacity)), to(rgba(204, 204, 204, @minOpacity)));
+  background: -moz-linear-gradient(top, rgba(204, 204, 204, @minOpacity), rgba(204, 204, 204, @maxOpacity) 50%, rgba(204, 204, 204, @minOpacity));
+  background: -ms-linear-gradient(top, rgba(204, 204, 204, @minOpacity), rgba(204, 204, 204, @maxOpacity) 50%, rgba(204, 204, 204, @minOpacity));
+}
+
 .transform3d {
   -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
@@ -278,82 +290,247 @@ body {
     left: 0;
     top: 0;
     background: rgba(0, 0, 0, .6);
-    .fly-login-box {
+    .fly-login-container{
       width: 350px;
-      height: 380px;
+      height: 420px;
       background: #fff;
       .position(a);
       left: 50%;
       top: 50%;
       .transform(translate(-50%, -50%));
-      border-radius: 5px;
-      header {
+      .fly-login-box,.fly-reg-box {
         width: 100%;
-        overflow: hidden;
-        .position(r);
-        height: .35rem;
-        .title {
-          .position(a);
-          margin: .05rem;
-          width: .4rem;
-        }
-        .close {
-          .position(a);
-          right: -.15rem;
-          top: -.15rem;
-          width: .3rem;
-          height: .3rem;
-          line-height: .08rem;
-          .transform(rotate(45deg));
-          cursor: pointer;
-          span {
+        height: 100%;
+        background: #fff;
+        .position(a);
+        header {
+          width: 100%;
+          overflow: hidden;
+          .position(r);
+          height: .35rem;
+          .title {
             .position(a);
+            margin: .05rem;
+            width: .4rem;
+          }
+          .close {
+            .position(a);
+            right: -.15rem;
+            top: -.15rem;
+            width: .3rem;
+            height: .3rem;
+            line-height: .08rem;
             .transform(rotate(45deg));
-            left: .1rem;
-            bottom: .01rem;
-            color: #fff;
+            cursor: pointer;
+            span {
+              .position(a);
+              .transform(rotate(45deg));
+              left: .1rem;
+              bottom: .01rem;
+              color: #fff;
+              display: inline-block;
+              width: .1rem;
+              height: .1rem;
+
+            }
+            background: #a40b16;
+          }
+        }
+
+        .fly-login-text {
+          width: 25%;
+          margin: 0 auto;
+        }
+        .input-box {
+          width: 70%;
+          margin: 20px auto 0;
+          height: 40px;
+          position: relative;
+          canvas {
+            position: absolute;
+            top: 20px;
+          }
+          input {
+            padding-left: .01rem;
+            width: 100%;
+            height: 30px;
+            position: absolute;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #a0a0a0;
+            outline: none;
+          }
+          .placeholder {
             display: inline-block;
-            width: .1rem;
-            height: .1rem;
+            position: absolute;
+            top: 10px;
+            transition: .4s;
+            color: #ccc;
+          }
+        }
+
+      }
+
+      overflow: hidden;
+      
+      .fly-login-box{
+        z-index:1;
+        .transition(.3s);
+        //.transitionTimingFunction(cubic-bezier(1, 0, 0, 0.96));
+        &.hide{
+          opacity:0;
+          .transform(translate3d(-100px,0,0) scaleX(.8));
+          z-index:-1;
+        }
+      }
+
+      .fly-reg-box{
+        .transition(.3s);
+
+        .transform(translate3d(0,200px,0));
+       // .transitionTimingFunction(cubic-bezier(1, 0, 0, 0.96));
+        z-index:-1;
+        opacity:0;
+        &.show{
+          opacity:1;
+          .transform(translate3d(0,0,0));
+        }
+        @errorColor:#a40b16;
+
+        .fly-reg-input{
+
+          overflow: hidden;
+          &.error{
+            border-color: @errorColor;
+            span.fly-label{
+              color:@errorColor;
+            }
+          }
+          &.no-border{
+            border:none;
+            padding-left:0 !important;
+            input{
+              border:1px solid #b5b5b5;
+              width:63%;
+              height:30px;
+              border-radius: 3px;
+              padding-left:5px;
+              box-sizing:border-box;
+            }
 
           }
-          background: #a40b16;
-        }
-      }
+          &.get-code{
 
-      .fly-login-text {
-        width: 25%;
-        margin: 0 auto;
-      }
-      .input-box {
-        width: 70%;
-        margin: 20px auto 0;
-        height: 40px;
-        position: relative;
-        canvas {
-          position: absolute;
-          top: 20px;
+            a{
+              height:32px;
+              margin-left:2%;
+              display: inline-block;
+              background: #f0b23e;
+              color:#000;
+              font-size:12px;
+              width:34%;
+              text-align: center;
+              border-radius:3px;
+            }
+          }
+          .position(r);
+          .mark{
+            .position(a);
+            left:23%;
+            font-size:12px;
+            z-index:-1;
+            color:#aaa;
+            top:2px;
+            display: inline-block;
+            .transition(.2s);
+
+            &.blur{
+              opacity:0;
+              .transform(translate3d(0,10px,0));
+            }
+          }
+
+
+          &.full-width{
+            input{
+              width:100%;
+              padding-left:5px;
+              box-sizing:border-box;
+            }
+          }
+
+          &.agree-clause{
+            input{
+              width:13px;
+              height:13px;
+              vertical-align: middle;
+            }
+
+            font-size:12px;
+
+            a{
+              color:#bf5841;
+            }
+          }
+
+          box-sizing: border-box;
+          width:70%;
+          height: 34px;
+          line-height:30px;
+          padding-left:10px;
+          margin:10px auto;
+          border:1px solid #b5b5b5;
+          border-radius:3px;
+          span{
+            display: inline-block;
+            &.fly-label{
+              font-size:12px;
+            }
+            &.fly-v-line{
+              .fly-v-gradient-line(.5,1);
+              width:2px;
+              height:20px;
+              margin:0 10px;
+              .position(r);
+              top:6px;
+            }
+          }
+
+          input{
+            height:20px;
+            //width:188px;
+            background: transparent;
+            border:none;
+          }
         }
-        input {
-          padding-left: .01rem;
-          width: 100%;
-          height: 30px;
-          position: absolute;
-          background: transparent;
-          border: none;
-          border-bottom: 2px solid #a0a0a0;
-          outline: none;
-        }
-        .placeholder {
+
+        a.btn-begin-reg{
+          width:100%;
+          height:30px;
           display: inline-block;
-          position: absolute;
-          top: 10px;
-          transition: .4s;
-          color: #ccc;
+          background: @errorColor;
+          text-align: center;
+          color: #fff;
+          border-radius: 3px;
+          .position(a);
         }
-      }
 
+        .go-login{
+          width:95%;
+          text-align: right;
+          margin:15px auto;
+          a{
+            color:#c8c8c8;
+            font-size:14px;
+            &:hover{
+              color: @errorColor;
+            }
+          }
+        }
+
+      }
     }
+
 
     .login-btn {
       width: 71%;
@@ -439,14 +616,12 @@ body {
     .fly-line {
       width: 90%;
       height: 2px;
-      margin: .15rem auto ;
-      background: -webkit-gradient(linear, left top, right top, from(rgba(204, 204, 204, .2)), color-stop(0.5, rgba(204, 204, 204, 1)), to(rgba(204, 204, 204, .2)));
-      background: -moz-linear-gradient(left, rgba(204, 204, 204, .2), rgba(204, 204, 204, 1) 50%, rgba(204, 204, 204, .2));
-      background: -ms-linear-gradient(left, rgba(204, 204, 204, .2), rgba(204, 204, 204, 1) 50%, rgba(204, 204, 204, .2));
+      margin: .3rem auto ;
+      .fly-h-gradient-line;
     }
 
     .other-login-box {
-      width: 90%;
+      width: 88%;
       margin: 0 auto;
       font-size: 14px;
       color: #aaa;

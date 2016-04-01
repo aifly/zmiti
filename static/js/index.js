@@ -27,12 +27,17 @@ window.addEventListener('load', function () {
         userCanvas: $("#canvas")[0],
         pwdCanvas: $("#canvas-pwd")[0],
         username: $("input[name='username']"),
-        password: $('input[name="pwd"]'),
+        password: $('input[type="password"]'),
         login: $('#login'),
         loginMask: $("#fly-main .fly-login-mask"),
         loginBtn: $(".btn-login"),
+        regBtn: $(".btn-reg"),
         btnOK: $('#fly-main .login-btn span'),
         rayen: $(".button--rayen"),
+        goToReg: $('#fly-main .go-to-reg'),
+        goToLogin: $('#fly-main .go-to-login'),
+        regBox: $('#fly-main .fly-reg-box'),
+        loginBox: $('#fly-main .fly-login-box'),
         animationEnd: 'onwebkitanimationend' in window ? 'webkitAnimationEnd' : 'animationend',
         transitionEnd: 'onwebkittransitionend' in window ? 'webkitTransitionEnd' : 'transitionend'
     };
@@ -643,6 +648,16 @@ window.addEventListener('load', function () {
         domInit: function domInit() {
             var _this6 = this;
 
+            data.goToReg.on("click", function () {
+                data.loginBox.addClass('hide');
+                data.regBox.addClass('show');
+            });
+
+            data.goToLogin.on('click', function () {
+                data.loginBox.removeClass('hide');
+                data.regBox.removeClass('show');
+            });
+
             data.btnOK.on('mousedown', function (e) {
                 $(e.target).addClass("shadow");
             }).on('mouseup', function (e) {
@@ -653,11 +668,32 @@ window.addEventListener('load', function () {
                 data.loginMask.addClass('show');
 
                 data.loginBtn[0].btn = data.loginBtn[0].btn || 1;
-
+                data.goToLogin.trigger("click");
                 if (data.loginBtn[0].btn === 1) {
                     data.loginBtn[0].btn = 2;
                     _this6.loginAction();
                 }
+            });
+
+            data.regBtn.on("click", function () {
+                data.loginMask.addClass('show');
+
+                data.regBtn[0].btn = data.regBtn[0].btn || 1;
+
+                data.goToReg.trigger("click");
+
+                if (data.regBtn[0].btn === 1) {
+                    data.regBtn[0].btn = 2;
+                    _this6.loginAction();
+                }
+            });
+
+            // data.regBtn.trigger('click');
+
+            $('.reg-input').on('focus', function (e) {
+                $(e.target).siblings('.mark').addClass('blur');
+            }).on('blur', function (e) {
+                $(e.target).siblings('.mark').removeClass('blur');
             });
 
             $(".close").on('click', function () {

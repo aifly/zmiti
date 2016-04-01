@@ -12,15 +12,20 @@ window.addEventListener('load', ()=> {
         main: $('#fly-main'),
         header: $('.fly-header'),
         canvas: $('#fly-stage')[0],
-        userCanvas:$("#canvas")[0],
-        pwdCanvas:$("#canvas-pwd")[0],
-        username:$("input[name='username']"),
-        password:$('input[name="pwd"]'),
-        login:$('#login'),
-        loginMask:$("#fly-main .fly-login-mask"),
-        loginBtn:$(".btn-login"),
-        btnOK:$('#fly-main .login-btn span'),
-        rayen:$(".button--rayen"),
+        userCanvas: $("#canvas")[0],
+        pwdCanvas: $("#canvas-pwd")[0],
+        username: $("input[name='username']"),
+        password: $('input[type="password"]'),
+        login: $('#login'),
+        loginMask: $("#fly-main .fly-login-mask"),
+        loginBtn: $(".btn-login"),
+        regBtn: $(".btn-reg"),
+        btnOK: $('#fly-main .login-btn span'),
+        rayen: $(".button--rayen"),
+        goToReg: $('#fly-main .go-to-reg'),
+        goToLogin: $('#fly-main .go-to-login'),
+        regBox:$('#fly-main .fly-reg-box'),
+        loginBox:$('#fly-main .fly-login-box'),
         animationEnd: 'onwebkitanimationend' in window ? 'webkitAnimationEnd' : 'animationend',
         transitionEnd: 'onwebkittransitionend' in window ? 'webkitTransitionEnd' : 'transitionend'
     };
@@ -186,7 +191,7 @@ window.addEventListener('load', ()=> {
                 }
             }
 
-            self.cueLine =  new Cueline();
+            self.cueLine = new Cueline();
 
             class Z1FlyLine {
                 constructor(option) {
@@ -464,7 +469,6 @@ window.addEventListener('load', ()=> {
             }
 
 
-
             stage.addChild(centerContainer);
 
             let min = 0,
@@ -536,39 +540,76 @@ window.addEventListener('load', ()=> {
                 stage.update(evt);
             }
 
-          //  self.loginAction();
+            //  self.loginAction();
             self.domInit();
         },
 
         domInit(){
 
 
-            data.btnOK.on('mousedown',(e)=>{
+            data.goToReg.on("click", ()=> {
+                data.loginBox.addClass('hide');
+                data.regBox.addClass('show');
+            });
+
+            data.goToLogin.on('click',()=>{
+                data.loginBox.removeClass('hide');
+                data.regBox.removeClass('show');
+            });
+
+
+            data.btnOK.on('mousedown', (e)=> {
                 $(e.target).addClass("shadow");
 
-            }).on('mouseup',(e)=>{
+            }).on('mouseup', (e)=> {
                 $(e.target).removeClass("shadow").addClass("hide").parent().find('.loading').addClass("show");
             });
 
 
-            data.loginBtn.on("click",()=>{
+            data.loginBtn.on("click", ()=> {
                 data.loginMask.addClass('show');
 
                 data.loginBtn[0].btn = data.loginBtn[0].btn || 1;
-
-                if(data.loginBtn[0].btn === 1){
+                data.goToLogin.trigger("click");
+                if (data.loginBtn[0].btn === 1) {
                     data.loginBtn[0].btn = 2;
                     this.loginAction();
 
                 }
             });
 
-            $(".close").on('click',()=>{
-               data.loginMask.removeClass('show');
+
+
+            data.regBtn.on("click", ()=> {
+                data.loginMask.addClass('show');
+
+                data.regBtn[0].btn = data.regBtn[0].btn || 1;
+
+                data.goToReg.trigger("click");
+
+                if (data.regBtn[0].btn === 1) {
+                    data.regBtn[0].btn = 2;
+                    this.loginAction();
+
+                }
             });
 
-            $(document).on('keydown',e=>{
-                e.keyCode === 27 &&  data.loginMask.removeClass('show');
+
+           // data.regBtn.trigger('click');
+
+
+            $('.reg-input').on('focus',(e)=>{
+                $(e.target).siblings('.mark').addClass('blur');
+            }).on('blur',(e)=>{
+                $(e.target).siblings('.mark').removeClass('blur');
+            });
+
+            $(".close").on('click', ()=> {
+                data.loginMask.removeClass('show');
+            });
+
+            $(document).on('keydown', e=> {
+                e.keyCode === 27 && data.loginMask.removeClass('show');
             });
 
         },
@@ -632,52 +673,53 @@ window.addEventListener('load', ()=> {
         },
 
         loginAction(){
-            let  all =data.login.find("*");
+            let all = data.login.find("*");
             let aSpan = $('.input-box .placeholder');
-            data.username.on("focus",()=>{
-                if(data.username.val().length<=0){
-                    aSpan.eq(0).css('transform','scale(.8) translate(-10px,-30px)');
+            data.username.on("focus", ()=> {
+                if (data.username.val().length <= 0) {
+                    aSpan.eq(0).css('transform', 'scale(.8) translate(-10px,-30px)');
                     this.sinLine({
-                        canvas:data.userCanvas,
-                        input:data.username
+                        canvas: data.userCanvas,
+                        input: data.username
                     })
                 }
 
-            }).on('blur',()=>{
-                if(data.username.val().length<=0){
-                    aSpan.eq(0).css('transform','scale(1) translate(0,0)');
+            }).on('blur', ()=> {
+                if (data.username.val().length <= 0) {
+                    aSpan.eq(0).css('transform', 'scale(1) translate(0,0)');
                     this.sinLine({
 
-                        canvas:data.userCanvas,
-                        input:data.username,
-                        isBack:true
+                        canvas: data.userCanvas,
+                        input: data.username,
+                        isBack: true
                     })
                 }
             });
 
-            data.password.on("focus",()=>{
-                if(data.password.val().length<=0){
-                    aSpan.eq(1).css('transform','scale(.8) translate(-10px,-30px)');
+
+            data.password.on("focus", ()=> {
+                if (data.password.val().length <= 0) {
+                    aSpan.eq(1).css('transform', 'scale(.8) translate(-10px,-30px)');
                     this.sinLine({
-                        canvas:data.pwdCanvas,
-                        input:data.password
-                    })
+                        canvas: data.pwdCanvas,
+                        input: data.password
+                    });
                 }
-                all.each((i,n)=>{
+                all.each((i, n)=> {
                     $(n).addClass("password")
                 })
 
-            }).on('blur',()=>{
-                all.each((i,n)=>{
+            }).on('blur', ()=> {
+                all.each((i, n)=> {
                     $(n).removeClass("password")
                 })
 
-                if(data.password.val().length<=0){
-                    aSpan.eq(1).css('transform','scale(1) translate(0,0)');
+                if (data.password.val().length <= 0) {
+                    aSpan.eq(1).css('transform', 'scale(1) translate(0,0)');
                     this.sinLine({
-                        canvas:data.pwdCanvas,
-                        input:data.password,
-                        isBack:true
+                        canvas: data.pwdCanvas,
+                        input: data.password,
+                        isBack: true
                     })
                 }
             });
@@ -705,7 +747,7 @@ window.addEventListener('load', ()=> {
                 value = height * .6,
                 deg = m.ceil(width / m.PI * 4),
                 k = isBack ? -10 : 10;
-            input.css("borderBottom",'none');
+            input.css("borderBottom", 'none');
             let t = setInterval(function () {
                 ang += k;
                 context.clearRect(0, 0, width, height);
@@ -731,9 +773,9 @@ window.addEventListener('load', ()=> {
             data.canvas.width = width;
             data.canvas.height = height - data.header.height();
 
-            data.login.css({top:$('.fly-login-box').offset().top-data.login.height()-$('.fly-header').height()+10})
+            data.login.css({top: $('.fly-login-box').offset().top - data.login.height() - $('.fly-header').height() + 10})
 
-            data.rayen.css({marginTop:(data.header.height()-30)/2});
+            data.rayen.css({marginTop: (data.header.height() - 30) / 2});
             return {width, height};
         },
         setDefault(width = data.viewWidth){
