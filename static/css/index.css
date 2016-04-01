@@ -412,6 +412,7 @@ body {
 }
 #fly-main .fly-login-mask .fly-login-container .fly-reg-box .fly-reg-input input {
   height: 20px;
+  width: 150px;
   background: transparent;
   border: none;
 }
