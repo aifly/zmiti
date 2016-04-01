@@ -24,8 +24,8 @@ window.addEventListener('load', ()=> {
         rayen: $(".button--rayen"),
         goToReg: $('#fly-main .go-to-reg'),
         goToLogin: $('#fly-main .go-to-login'),
-        regBox:$('#fly-main .fly-reg-box'),
-        loginBox:$('#fly-main .fly-login-box'),
+        regBox: $('#fly-main .fly-reg-box'),
+        loginBox: $('#fly-main .fly-login-box'),
         animationEnd: 'onwebkitanimationend' in window ? 'webkitAnimationEnd' : 'animationend',
         transitionEnd: 'onwebkittransitionend' in window ? 'webkitTransitionEnd' : 'transitionend'
     };
@@ -552,7 +552,7 @@ window.addEventListener('load', ()=> {
                 data.regBox.addClass('show');
             });
 
-            data.goToLogin.on('click',()=>{
+            data.goToLogin.on('click', ()=> {
                 data.loginBox.removeClass('hide');
                 data.regBox.removeClass('show');
             });
@@ -579,7 +579,6 @@ window.addEventListener('load', ()=> {
             });
 
 
-
             data.regBtn.on("click", ()=> {
                 data.loginMask.addClass('show');
 
@@ -595,13 +594,13 @@ window.addEventListener('load', ()=> {
             });
 
 
-           // data.regBtn.trigger('click');
+            // data.regBtn.trigger('click');
 
 
-            $('.reg-input').on('focus',(e)=>{
-                $(e.target).siblings('.mark').addClass('blur');
-            }).on('blur',(e)=>{
-                $(e.target).siblings('.mark').removeClass('blur');
+            $('.reg-input').on('focus', (e)=> {
+                $(e.target).val().length <= 0 && $(e.target).siblings('.mark').addClass('blur');
+            }).on('blur', (e)=> {
+                $(e.target).val().length <= 0 && $(e.target).siblings('.mark').removeClass('blur');
             });
 
             $(".close").on('click', ()=> {

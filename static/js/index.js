@@ -691,9 +691,9 @@ window.addEventListener('load', function () {
             // data.regBtn.trigger('click');
 
             $('.reg-input').on('focus', function (e) {
-                $(e.target).siblings('.mark').addClass('blur');
+                $(e.target).val().length <= 0 && $(e.target).siblings('.mark').addClass('blur');
             }).on('blur', function (e) {
-                $(e.target).siblings('.mark').removeClass('blur');
+                $(e.target).val().length <= 0 && $(e.target).siblings('.mark').removeClass('blur');
             });
 
             $(".close").on('click', function () {
