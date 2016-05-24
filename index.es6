@@ -27,10 +27,13 @@ window.addEventListener('load', ()=> {
         regBox: $('#fly-main .fly-reg-box'),
         loginBox: $('#fly-main .fly-login-box'),
         animationEnd: 'onwebkitanimationend' in window ? 'webkitAnimationEnd' : 'animationend',
-        transitionEnd: 'onwebkittransitionend' in window ? 'webkitTransitionEnd' : 'transitionend'
+        transitionEnd: 'onwebkittransitionend' in window ? 'webkitTransitionEnd' : 'transitionend',
+        baseUrl:'http://api.zmiti.com/SmartMedia/services/'
     };
 
     let utilMethods = {
+
+
 
         init(){
             let self = this;
@@ -91,7 +94,6 @@ window.addEventListener('load', ()=> {
             let zFill3 = new createjs.Shape().set({y: 0});
             zFill3.graphics.beginFill("#fff").drawRect(containerWidth - 80, -1, 20, 3);
 
-
             let zFill4 = new createjs.Shape().set({y: 2});
             zFill4.graphics.beginFill("#fff").drawRoundRect(containerWidth - 185, zHeight - 6, 20, 3, 1);
 
@@ -120,24 +122,24 @@ window.addEventListener('load', ()=> {
             linearGradientRect3.graphics.beginLinearGradientFill(["rgba(255,139,0,1)", "rgba(255,139,0,.1)"], [0, 1], 0, 0, 0, 170).drawRoundRect(0, 0, containerWidth, zHeight * 1.4, 45);
 
 
-            let cloudImg = new createjs.Bitmap('./static/images/c-center.png').set({x: 180, y: 120});
+            let cloudImg = new createjs.Bitmap('./statices/images/c-center.png').set({x: 180, y: 120});
             cloudImg.scaleX = .8;
             cloudImg.scaleY = .8;
             this.cloudImg = cloudImg;
 
-            let devicePc = new createjs.Bitmap('./static/images/pc.png').set({
+            let devicePc = new createjs.Bitmap('./statices/images/pc.png').set({
                 scaleX: .7,
                 scaleY: .7,
                 y: z3.y + 15,
                 x: containerWidth / 5
             });
-            let deviceMobile = new createjs.Bitmap('./static/images/mobile.png').set({
+            let deviceMobile = new createjs.Bitmap('./statices/images/mobile.png').set({
                 scaleX: 1,
                 scaleY: 1,
                 y: z3.y + 20,
                 x: containerWidth / 2
             });
-            let devicePad = new createjs.Bitmap('./static/images/pad.png').set({
+            let devicePad = new createjs.Bitmap('./statices/images/pad.png').set({
                 scaleX: .7,
                 scaleY: .7,
                 y: z3.y + 20,
@@ -150,7 +152,7 @@ window.addEventListener('load', ()=> {
                 waitingComArr = [],
                 imgArr = ['a', 'v', 'i', 't', 'v1', 'z-ai', 'z-e', 'z-i', 'z-m', 'z-ps', 'z-t'];
             imgArr = imgArr.map(item => {
-                return './static/images/' + item + '.png';
+                return './statices/images/' + item + '.png';
             });
             shapeArr.forEach(item=> {
                 centerContainer.addChild(item);
@@ -302,6 +304,7 @@ window.addEventListener('load', ()=> {
                 }
 
                 roll() {
+
                     if (!this.img) {
                         return;
                     }
@@ -352,7 +355,6 @@ window.addEventListener('load', ()=> {
                         scaleY: this.scale
                     });
 
-
                     bitMap.cursor = 'pointer';
                     this.img = bitMap;
                     bitMap.on("mousedown", e=> {
@@ -360,7 +362,7 @@ window.addEventListener('load', ()=> {
                         this.canMove = true;
                     });
                     bitMap.on('pressmove', e=> {
-                        if (this.canMove) {
+                        if (this.canMove && this.img) {
 
                             if (!this.one && bitMap.x + this.w > centerContainer.x && bitMap.x < centerContainer.x + zHeight
                                 && bitMap.y + this.h > centerContainer.y - 20 && bitMap.y < centerContainer.y + zHeight) {
@@ -400,6 +402,11 @@ window.addEventListener('load', ()=> {
                                 y: (zHeight - 10 - this.h) / 2,
                                 scale: 1
                             }));
+
+                            componentsArr.stop = true;
+                            componentsArr.iNow = 0;
+
+
                             if (!this.left) {
                                 min = containerWidth + containerWidth;
                                 maxW = data.viewWidth - 100;
@@ -471,6 +478,15 @@ window.addEventListener('load', ()=> {
 
             stage.addChild(centerContainer);
 
+
+            componentsArr.push(new ProduceCom({
+                img: imgArr[0],
+                x: 0,
+                y: (zHeight - 10 - 70) / 2,
+                scale: 1
+            }));
+
+
             let min = 0,
                 maxW = centerContainer.x,
                 maxH = data.viewHeight - 100;
@@ -509,10 +525,41 @@ window.addEventListener('load', ()=> {
             let iNow = 0,
                 iNow1 = 0;
 
+            componentsArr.iNow = 0;
+
             function tick(evt) {
                 z1_1.dashCmd.offset += 1;
                 z2_1.dashCmd.offset += 1.47;
                 z3_1.dashCmd.offset += 1;
+
+
+                componentsArr.iNow++;
+                if (componentsArr.iNow % 400 === 0 && !componentsArr.stop) {
+                    componentsArr.iNow = 0;
+                    let index = Math.floor(utilMethods.r(0, 10));
+                    let height = index > 4 ? 55 : 70;
+                    componentsArr.push(new ProduceCom({
+                        img: imgArr[index],
+                        x: 0,
+                        y: (zHeight - 10 - height) / 2,
+                        scale: 1
+                    }));
+                }
+                else {
+
+                    if (componentsArr.iNow % 400 === 0) {
+                        componentsArr.stop = false;
+                        componentsArr.iNow = 0;
+                        let index = Math.floor(utilMethods.r(0, 10));
+                        let height = index > 4 ? 55 : 70;
+                        componentsArr.push(new ProduceCom({
+                            img: imgArr[index],
+                            x: 0,
+                            y: (zHeight - 10 - height) / 2,
+                            scale: 1
+                        }));
+                    }
+                }
 
                 componentsArr.forEach(c=>c.roll());
                 waitingComArr.forEach(c=>c.roll());
@@ -561,14 +608,22 @@ window.addEventListener('load', ()=> {
             data.btnOK.on('mousedown', (e)=> {
                 $(e.target).addClass("shadow");
 
+                $.ajax({
+                    type:"POST",
+                    url:'http://api.zmiti.com/services/User/list?id=100',
+                    dataType:'jsonp',
+                    contentType: 'text/json',
+                    success:function(data){
+                        alert(data);
+                    }
+                })
+
             }).on('mouseup', (e)=> {
                 $(e.target).removeClass("shadow").addClass("hide").parent().find('.loading').addClass("show");
             });
 
-
             data.loginBtn.on("click", ()=> {
                 data.loginMask.addClass('show');
-
                 data.loginBtn[0].btn = data.loginBtn[0].btn || 1;
                 data.goToLogin.trigger("click");
                 if (data.loginBtn[0].btn === 1) {
@@ -577,7 +632,6 @@ window.addEventListener('load', ()=> {
 
                 }
             });
-
 
             data.regBtn.on("click", ()=> {
                 data.loginMask.addClass('show');

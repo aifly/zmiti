@@ -15,7 +15,7 @@ gulp.task("cssminify", function () {
 gulp.task("lessc", function () {
 	gulp.src("index.less")
 		.pipe(less())
-		.pipe(gulp.dest("static/css"))
+		.pipe(gulp.dest("statices/css"))
 		.pipe(livereload());
 });
 
@@ -23,7 +23,7 @@ gulp.task("compileEs6",function(){
 	return gulp.src('index.es6')
 		.pipe(plumber())
 		.pipe(babel({presets:['es2015']}))
-		.pipe(gulp.dest('static/js'));
+		.pipe(gulp.dest('statices/js'));
 });
 
 

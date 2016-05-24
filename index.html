@@ -3,31 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no"/>
-    <title>智媒体</title>
-    <link rel="stylesheet" href="static/css/index.min.css">
+    <title>智媒体首页---测试</title>
+    <link rel="stylesheet" href="statices/css/index.min.css">
 </head>
 <body>
 
 <header class="fly-header">
     <aside class="logo-box">
-        <div class="logo"><img draggable="false" src="static/images/logo.png" alt=""></div>
+        <div class="logo"><img draggable="false" src="statices/images/logo.png" alt=""></div>
     </aside>
     <aside class="login-box">
         <!--<a href="#" class="btn-login">登录</a>-->
         <button class="btn-login button button--rayen button--border-thin button--text-thick button--text-upper button--size-s" data-text="登录"><span>登录</span></button>
 
         <button class="btn-reg button button--rayen button--border-thin button--text-thick button--text-upper button--size-s" data-text="注册"><span>注册</span></button>
-
+        <span style="margin-left: 20%">beta</span>
     </aside>
 </header>
 
 <section id="fly-main">
-    <div class="cloud1 cloud"><img draggable="false" src="static/images/cloud1.png" alt=""></div>
-    <div class="cloud2 cloud"><img draggable="false" src="static/images/cloud2.png" alt=""></div>
-    <div class="cloud3 cloud"><img draggable="false" src="static/images/cloud3.png" alt=""></div>
+    <div class="cloud1 cloud"><img draggable="false" src="statices/images/cloud1.png" alt=""></div>
+    <div class="cloud2 cloud"><img draggable="false" src="statices/images/cloud2.png" alt=""></div>
+    <div class="cloud3 cloud"><img draggable="false" src="statices/images/cloud3.png" alt=""></div>
     <canvas id="fly-stage"></canvas>
 
-    <div class="fly-login-mask " >
+    <div class="fly-login-mask" >
         <div id="login">
             <div class="owl">
                 <div class="hand"></div>
@@ -42,11 +42,11 @@
         <div class="fly-login-container">
             <div class="fly-login-box">
                 <header>
-                    <div class="title"><img draggable="false" src="./static/images/login-title.png" alt=""></div>
+                    <div class="title"><img draggable="false" src="./statices/images/login-title.png" alt=""></div>
                     <div class="close"><span>&times;</span></div>
                 </header>
                 <section class="fly-login-text">
-                    <img src="./static/images/login-text.png" draggable="false" alt="">
+                    <img src="./statices/images/login-text.png" draggable="false" alt="">
                 </section>
                 <div class="fly-username input-box">
                     <canvas id="canvas" height="20" ></canvas>
@@ -56,7 +56,7 @@
                 <div class="fly-pwd input-box">
                     <canvas id="canvas-pwd" height="20" ></canvas>
                     <span class="placeholder">密码</span>
-                    <input type="password" name="pwd">
+                    <input type="password" name="pwd" autocomplete="off">
                 </div>
                 <div class="login-btn loaded">
                     <input type="button" value="" class="btn-ok">
@@ -85,14 +85,13 @@
                     </div>
                 </div>
             </div>
-
             <div class="fly-reg-box">
                 <header>
-                    <div class="title"><img draggable="false" src="./static/images/login-title.png" alt=""></div>
+                    <div class="title"><img draggable="false" src="./statices/images/login-title.png" alt=""></div>
                     <div class="close"><span>&times;</span></div>
                 </header>
                 <section class="fly-login-text">
-                    <img src="./static/images/reg-text.png" draggable="false" alt="">
+                    <img src="./statices/images/reg-text.png" draggable="false" alt="">
                 </section>
                 <div class="fly-reg-input ">
                     <span class="fly-label">账号</span><span class="fly-v-line"></span><input type="text" class="reg-input" name="reg-username"><label class="mark">123456@qq.com</label>
@@ -122,12 +121,13 @@
             </div>
         </div>
     </div>
-
 </section>
 
+<script src="statices/js/createjs.js"></script>
+<script src="statices/js/jquery.min.js"></script>
+<script src="statices/js/index.js"></script>
+<!--<script src="http://localhost:5000/index.js"></script>-->
 
-<script src="static/js/createjs.js"></script>
-<script src="static/js/jquery.min.js"></script>
-<script src="static/js/index.js"></script>
+
 </body>
 </html>

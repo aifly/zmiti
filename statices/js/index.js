@@ -39,7 +39,8 @@ window.addEventListener('load', function () {
         regBox: $('#fly-main .fly-reg-box'),
         loginBox: $('#fly-main .fly-login-box'),
         animationEnd: 'onwebkitanimationend' in window ? 'webkitAnimationEnd' : 'animationend',
-        transitionEnd: 'onwebkittransitionend' in window ? 'webkitTransitionEnd' : 'transitionend'
+        transitionEnd: 'onwebkittransitionend' in window ? 'webkitTransitionEnd' : 'transitionend',
+        baseUrl: 'http://api.zmiti.com/SmartMedia/services/'
     };
 
     var utilMethods = {
@@ -136,24 +137,24 @@ window.addEventListener('load', function () {
             var linearGradientRect3 = new createjs.Shape().set({ x: z3.x, y: containerHeight - zHeight - 50 });
             linearGradientRect3.graphics.beginLinearGradientFill(["rgba(255,139,0,1)", "rgba(255,139,0,.1)"], [0, 1], 0, 0, 0, 170).drawRoundRect(0, 0, containerWidth, zHeight * 1.4, 45);
 
-            var cloudImg = new createjs.Bitmap('./static/images/c-center.png').set({ x: 180, y: 120 });
+            var cloudImg = new createjs.Bitmap('./statices/images/c-center.png').set({ x: 180, y: 120 });
             cloudImg.scaleX = .8;
             cloudImg.scaleY = .8;
             this.cloudImg = cloudImg;
 
-            var devicePc = new createjs.Bitmap('./static/images/pc.png').set({
+            var devicePc = new createjs.Bitmap('./statices/images/pc.png').set({
                 scaleX: .7,
                 scaleY: .7,
                 y: z3.y + 15,
                 x: containerWidth / 5
             });
-            var deviceMobile = new createjs.Bitmap('./static/images/mobile.png').set({
+            var deviceMobile = new createjs.Bitmap('./statices/images/mobile.png').set({
                 scaleX: 1,
                 scaleY: 1,
                 y: z3.y + 20,
                 x: containerWidth / 2
             });
-            var devicePad = new createjs.Bitmap('./static/images/pad.png').set({
+            var devicePad = new createjs.Bitmap('./statices/images/pad.png').set({
                 scaleX: .7,
                 scaleY: .7,
                 y: z3.y + 20,
@@ -166,7 +167,7 @@ window.addEventListener('load', function () {
                 waitingComArr = [],
                 imgArr = ['a', 'v', 'i', 't', 'v1', 'z-ai', 'z-e', 'z-i', 'z-m', 'z-ps', 'z-t'];
             imgArr = imgArr.map(function (item) {
-                return './static/images/' + item + '.png';
+                return './statices/images/' + item + '.png';
             });
             shapeArr.forEach(function (item) {
                 centerContainer.addChild(item);
@@ -389,6 +390,7 @@ window.addEventListener('load', function () {
                 }, {
                     key: 'roll',
                     value: function roll() {
+
                         if (!this.img) {
                             return;
                         }
@@ -469,7 +471,7 @@ window.addEventListener('load', function () {
                             _this5.canMove = true;
                         });
                         bitMap.on('pressmove', function (e) {
-                            if (_this5.canMove) {
+                            if (_this5.canMove && _this5.img) {
 
                                 if (!_this5.one && bitMap.x + _this5.w > centerContainer.x && bitMap.x < centerContainer.x + zHeight && bitMap.y + _this5.h > centerContainer.y - 20 && bitMap.y < centerContainer.y + zHeight) {
                                     // self.comDanger(bitMap,stage);
@@ -505,6 +507,10 @@ window.addEventListener('load', function () {
                                     y: (zHeight - 10 - _this5.h) / 2,
                                     scale: 1
                                 }));
+
+                                componentsArr.stop = true;
+                                componentsArr.iNow = 0;
+
                                 if (!_this5.left) {
                                     min = containerWidth + containerWidth;
                                     maxW = data.viewWidth - 100;
@@ -572,6 +578,13 @@ window.addEventListener('load', function () {
 
             stage.addChild(centerContainer);
 
+            componentsArr.push(new ProduceCom({
+                img: imgArr[0],
+                x: 0,
+                y: (zHeight - 10 - 70) / 2,
+                scale: 1
+            }));
+
             var min = 0,
                 maxW = centerContainer.x,
                 maxH = data.viewHeight - 100;
@@ -606,10 +619,39 @@ window.addEventListener('load', function () {
             var iNow = 0,
                 iNow1 = 0;
 
+            componentsArr.iNow = 0;
+
             function tick(evt) {
                 z1_1.dashCmd.offset += 1;
                 z2_1.dashCmd.offset += 1.47;
                 z3_1.dashCmd.offset += 1;
+
+                componentsArr.iNow++;
+                if (componentsArr.iNow % 400 === 0 && !componentsArr.stop) {
+                    componentsArr.iNow = 0;
+                    var index = Math.floor(utilMethods.r(0, 10));
+                    var height = index > 4 ? 55 : 70;
+                    componentsArr.push(new ProduceCom({
+                        img: imgArr[index],
+                        x: 0,
+                        y: (zHeight - 10 - height) / 2,
+                        scale: 1
+                    }));
+                } else {
+
+                    if (componentsArr.iNow % 400 === 0) {
+                        componentsArr.stop = false;
+                        componentsArr.iNow = 0;
+                        var _index = Math.floor(utilMethods.r(0, 10));
+                        var _height = _index > 4 ? 55 : 70;
+                        componentsArr.push(new ProduceCom({
+                            img: imgArr[_index],
+                            x: 0,
+                            y: (zHeight - 10 - _height) / 2,
+                            scale: 1
+                        }));
+                    }
+                }
 
                 componentsArr.forEach(function (c) {
                     return c.roll();
@@ -660,13 +702,22 @@ window.addEventListener('load', function () {
 
             data.btnOK.on('mousedown', function (e) {
                 $(e.target).addClass("shadow");
+
+                $.ajax({
+                    type: "POST",
+                    url: 'http://api.zmiti.com/services/User/list?id=100',
+                    dataType: 'jsonp',
+                    contentType: 'text/json',
+                    success: function success(data) {
+                        alert(data);
+                    }
+                });
             }).on('mouseup', function (e) {
                 $(e.target).removeClass("shadow").addClass("hide").parent().find('.loading').addClass("show");
             });
 
             data.loginBtn.on("click", function () {
                 data.loginMask.addClass('show');
-
                 data.loginBtn[0].btn = data.loginBtn[0].btn || 1;
                 data.goToLogin.trigger("click");
                 if (data.loginBtn[0].btn === 1) {
