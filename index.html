@@ -20,6 +20,10 @@
         #main-ui{
             transition:1s opacity;
             -webkit-transition:1s opacity;
+            opacity: 0;
+        }
+        #main-ui.active{
+            opacity:1;
         }
         .ant-spin{
             color: #fff;
@@ -209,9 +213,9 @@
 </div>
 
 <script src="statices/js/createjs.js" ></script>
-<script src="./statices/js/index.js" onload="var loading =document.getElementById('loading') ;loading.parentNode.removeChild(loading)"></script>
+<script src="./statices/js/index.js" onload="var loading =document.getElementById('loading') ;loading.parentNode.removeChild(loading);document.getElementById('main-ui').classList.add('active')"></script>
 
-<!--<script src="http://localhost:5000/index.js"  onload="var loading =document.getElementById('loading') ;loading.parentNode.removeChild(loading)"></script>-->
+<!--<script src="http://localhost:5000/index.js"  onload="var loading =document.getElementById('loading') ;loading.parentNode.removeChild(loading);document.getElementById('main-ui').classList.add('active')"></script>-->
 
 
 </body>
