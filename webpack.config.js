@@ -22,7 +22,14 @@ module.exports = {
                 test:path.join(__dirname,''),
                 loaders:['babel-loader'],
                 exclude:/node_modules/,
-
+            },
+            {
+                test:/\.png|\.jpg$/,
+                loaders:["url-loader?limit=30720"] //30720
+            },
+            {
+                test:/.css$/,
+                loader:'style-loader!css-loader'
             }
         ]
     }

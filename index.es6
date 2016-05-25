@@ -2,6 +2,28 @@
  created by fly on 2016/2/23 0023
  */
 
+import $ from 'jquery';
+import './statices/css/index.min.css';
+import cCenter from './statices/images/c-center.png';
+import pc from './statices/images/pc.png';
+import a from './statices/images/a.png';
+import c from './statices/images/c.png';
+import i from './statices/images/i.png';
+import mobile from './statices/images/mobile.png';
+import pad from './statices/images/pad.png';
+import t from './statices/images/t.png';
+import v from './statices/images/v.png';
+import v1 from './statices/images/v1.png';
+import zAi from './statices/images/z-ai.png';
+import zE from './statices/images/z-e.png';
+import zI from './statices/images/z-i.png';
+import zM from './statices/images/z-m.png';
+import zPs from './statices/images/z-ps.png';
+import zT from './statices/images/z-t.png';
+
+//console.log(cCenter,pc,a,c,i,mobile,pad,t,v,v1,zAi,zE,zI,zM,zPs,zT);
+
+
 window.addEventListener('load', ()=> {
     let doc = document;
 
@@ -28,12 +50,10 @@ window.addEventListener('load', ()=> {
         loginBox: $('#fly-main .fly-login-box'),
         animationEnd: 'onwebkitanimationend' in window ? 'webkitAnimationEnd' : 'animationend',
         transitionEnd: 'onwebkittransitionend' in window ? 'webkitTransitionEnd' : 'transitionend',
-        baseUrl:'http://api.zmiti.com/SmartMedia/services/'
+        baseUrl: 'http://api.zmiti.com/SmartMedia/services/'
     };
 
     let utilMethods = {
-
-
 
         init(){
             let self = this;
@@ -122,78 +142,23 @@ window.addEventListener('load', ()=> {
             linearGradientRect3.graphics.beginLinearGradientFill(["rgba(255,139,0,1)", "rgba(255,139,0,.1)"], [0, 1], 0, 0, 0, 170).drawRoundRect(0, 0, containerWidth, zHeight * 1.4, 45);
 
 
-            let cloudImg = new createjs.Bitmap('./statices/images/c-center.png').set({x: 180, y: 120});
+            let cloudImg = new createjs.Bitmap(cCenter).set({x: 400, y: 220});
             cloudImg.scaleX = .8;
             cloudImg.scaleY = .8;
+            cloudImg.regX = 300;
+            cloudImg.regY = 100;
             this.cloudImg = cloudImg;
 
-            let devicePc = new createjs.Bitmap('./statices/images/pc.png').set({
-                scaleX: .7,
-                scaleY: .7,
-                y: z3.y + 15,
-                x: containerWidth / 5
-            });
-            let deviceMobile = new createjs.Bitmap('./statices/images/mobile.png').set({
-                scaleX: 1,
-                scaleY: 1,
-                y: z3.y + 20,
-                x: containerWidth / 2
-            });
-            let devicePad = new createjs.Bitmap('./statices/images/pad.png').set({
-                scaleX: .7,
-                scaleY: .7,
-                y: z3.y + 20,
-                x: containerWidth / 1.5
-            });
-
-            let shapeArr = [linearGradientRect1, linearGradientRect2, linearGradientRect3, z1, z1_1, z3, z3_1, z2, z2_1, zFill1, zFill2, zFill3, zFill4, zFill5, zFill6, line1, line2, cloudImg, devicePc, deviceMobile, devicePad],
+            let shapeArr = [linearGradientRect1, linearGradientRect2, linearGradientRect3, z1, z1_1, z3, z3_1, z2, z2_1, zFill1, zFill2, zFill3, zFill4, zFill5, zFill6, line1, line2, cloudImg],
                 lineArr = [],
                 componentsArr = [],
                 waitingComArr = [],
-                imgArr = ['a', 'v', 'i', 't', 'v1', 'z-ai', 'z-e', 'z-i', 'z-m', 'z-ps', 'z-t'];
-            imgArr = imgArr.map(item => {
-                return './statices/images/' + item + '.png';
-            });
+                deviceArr = [],
+                imgArr = [a, v, i, t, v1, zAi, zE, zI, zM, zPs, zT];
+            this.deviceArr = deviceArr,
             shapeArr.forEach(item=> {
                 centerContainer.addChild(item);
             });
-
-            class Cueline {//提示线。
-                constructor(option = {}) {
-                    let s = this;
-                    //   [s.endX, s.endY] = [option.endX, option.endY];
-                    s.draw();
-                }
-
-                draw() {
-                    let container = new createjs.Container();
-
-                    let line = new createjs.Shape();
-                    line.graphics.setStrokeStyle(1).beginStroke("#f90").moveTo(containerWidth / 2 + 20, containerHeight / 2 - 20).lineTo(containerWidth / 3.5, devicePc.y).endFill();
-
-
-                    let line1 = new createjs.Shape();
-                    line1.graphics.setStrokeStyle(1).beginStroke("#f90").moveTo(containerWidth / 2 + 20, containerHeight / 2 - 20).lineTo(containerWidth / 1.9, deviceMobile.y).endFill();
-
-                    let line2 = new createjs.Shape();
-                    line2.graphics.setStrokeStyle(1).beginStroke("#f90").moveTo(containerWidth / 2 + 20, containerHeight / 2 - 20).lineTo(containerWidth / 1.4, devicePad.y).endFill();
-
-                    container.addChild(line, line1, line2);
-                    this.container = container;
-                    this.container.visible = false;
-                    centerContainer.addChild(container);
-                }
-
-                show() {
-                    this.container.visible = true;
-                }
-
-                hide() {
-                    this.container.visible = false;
-                }
-            }
-
-            self.cueLine = new Cueline();
 
             class Z1FlyLine {
                 constructor(option) {
@@ -272,6 +237,8 @@ window.addEventListener('load', ()=> {
                     s.scale = option.scale;
                     s.w = 0;
                     s.h = 0;
+                    s.regX = option.regX;
+                    s.regY = option.regY;
                     let image = new Image();
                     image.onload = function () {
                         s.w = this.width * (s.scale || 1);
@@ -310,15 +277,16 @@ window.addEventListener('load', ()=> {
                     }
                     centerContainer.setChildIndex(this.img, centerContainer.getChildIndex(cloudImg) - 1);
                     if (this.img.x <= containerWidth - 10 - this.w && !this.back) {
-                        this.img.x += .5;
+                        this.img.x += 1;
                     }
                     else {//开始转弯
                         this.back = true;
-                        this.img.x -= .4;
-                        this.img.y += .4;
+                        this.img.x -= .7;
+                        this.img.y += .7;
                         if (this.img.y > 160) {
                             centerContainer.removeChild(this.img);
                             self.produce();
+                            componentsArr.shift();
                             this.img = null;
                             this.image = null;
                         }
@@ -327,16 +295,37 @@ window.addEventListener('load', ()=> {
                 }
             }
 
+            let WaittingForProduceComPos = [
+                {x: data.viewWidth * .05, y: data.viewHeight * .2},
+                {x: data.viewWidth * .3, y: data.viewHeight * .50},
+                {x: data.viewWidth * .22, y: data.viewHeight * .30},
+                {x: data.viewWidth * .08, y: data.viewHeight * .50},
+                {x: data.viewWidth * .20, y: data.viewHeight * .75},
+                {x: data.viewWidth * .5, y: data.viewHeight * .08},
+                {x: data.viewWidth * .80, y: data.viewHeight * .15},
+                {x: data.viewWidth * .70, y: data.viewHeight * .46},
+                {x: data.viewWidth * .93, y: data.viewHeight * .4},
+                {x: data.viewWidth * .85, y: data.viewHeight * .75},
+                {x: data.viewWidth * .5, y: data.viewHeight * .85},
+
+            ]
+
             class WaittingForProduceCom extends Components {
                 constructor(option) {
                     super(option);
                     let s = this;
-                    [s.life, s.speedX, s.speedY, s.start, s.iNow, s.canMove, s.name, s.angle] = [self.r(120, 180), self.r(-.6, .6), self.r(-.6, .6), true, 0, false, self.getGuid(), 0];
+                    [s.lifeX, s.lifeY, s.speedX, s.speedY, s.start, s.iNow, s.canMove, s.name, s.angle] =
+                        [self.r(80, 100), self.r(60, 80), self.r(.08, .2), self.r(.1, .21), true, 0, false, self.getGuid(), 0];
 
                     /* s.x = s.left ? self.r(0, centerContainer.x) : self.r(centerContainer.x + containerWidth, data.viewWidth);
                      s.y = self.r(0, data.viewHeight);*/
                     s.left = s.x <= centerContainer.x;
+                    s.id = WaittingForProduceCom.comId++;
+                    s.iNow1 = 0;
+
+
                 }
+
 
                 starting() {
 
@@ -360,6 +349,8 @@ window.addEventListener('load', ()=> {
                     bitMap.on("mousedown", e=> {
                         this.stop();
                         this.canMove = true;
+                        bitMap.defaultX = bitMap.x;
+                        bitMap.defaultY = bitMap.y;
                     });
                     bitMap.on('pressmove', e=> {
                         if (this.canMove && this.img) {
@@ -367,10 +358,7 @@ window.addEventListener('load', ()=> {
                             if (!this.one && bitMap.x + this.w > centerContainer.x && bitMap.x < centerContainer.x + zHeight
                                 && bitMap.y + this.h > centerContainer.y - 20 && bitMap.y < centerContainer.y + zHeight) {
                                 // self.comDanger(bitMap,stage);
-
-
                             }
-
 
                             let x = e.stageX - this.w / 2,
                                 y = e.stageY - this.h / 2;
@@ -418,8 +406,8 @@ window.addEventListener('load', ()=> {
 
                             waitingComArr.push(new WaittingForProduceCom({
                                 img: this.src,
-                                x: self.r(min, maxW),
-                                y: self.r(0, maxH),
+                                x: bitMap.defaultX,
+                                y: bitMap.defaultY,
                                 scale: .8
                             }));
                             this.stop();
@@ -453,7 +441,6 @@ window.addEventListener('load', ()=> {
 
                     if (s.start) {
 
-
                         s.img.x += s.speedX;
                         s.img.y += s.speedY;
 
@@ -464,17 +451,111 @@ window.addEventListener('load', ()=> {
                         s.img.x > data.viewWidth - 100 && (s.speedX *= -1);
 
                         s.iNow++;
-                        if (s.iNow >= s.life) {
-                            s.life = self.r(s.life, s.life + 150)
+                        if (s.iNow >= s.lifeX) {
+                            // s.life = self.r(s.life, s.life + 150)
                             s.iNow = 0;
-                            self.r(-1, 1) > 0 && ( s.speedX *= -1);
-                            self.r(-1, 1) > 0 && (s.speedY *= -1);
+                            ( s.speedX *= -1);
+                        }
+                        s.iNow1++;
+                        if (s.iNow1 >= s.lifeY) {
+                            s.iNow1 = 0;
+                            (s.speedY *= -1);
                         }
 
                     }
                 }
             }
 
+            class DeviceCom extends Components {
+                constructor(option) {
+                    super(option);
+                    [this.speedX, this.speedY,this.isStart] = [-1, 1,false];
+                }
+
+                draw() {//
+                    let img = new createjs.Bitmap(this.src).set({x: this.x, y: this.y, scale: 1});
+                    this.img = img;
+                    this.img.regX = this.regX;
+                    this.img.regY = this.regY;
+                    this.img.scaleX = this.scale;
+                    this.img.scaleY = this.scale;
+
+                    centerContainer.addChildAt(img, centerContainer.getChildIndex(cloudImg) + 1);
+                }
+                ripe(){
+                    createjs.Tween.get(this.img)
+                    .to({scaleX:1,scaleY:1},700,createjs.Ease.elasticOut).call(()=>{
+                        this.isStart = true;
+                    });
+
+                    return this;
+                }
+                roll() {
+                    if(!this.img || !this.isStart){
+                        return;
+                    }
+                    this.img.x += this.speedX;
+                    this.img.y += this.speedY;
+                    if (this.img.y > z3.y + 30) {
+                        this.speedY = 0;
+                        this.speedX = 1;
+                        if(this.img.x > containerWidth - 20){
+                            this.speedX = 0;
+                            this.die();
+                        }
+                    }
+                }
+                die(){
+                    centerContainer.removeChild(this.img);
+                    this.img = null;
+                    deviceArr.shift();
+                }
+            }
+            this.DeviceCom = DeviceCom;
+
+            this.deviceData = [
+                {
+                    img:pc,
+                    x:containerWidth / 2 - 60,
+                    y:containerWidth / 2,
+                    regX:60,
+                    regY:20,
+                    scale:0
+                },
+                {
+                    img:pad,
+                    x:containerWidth / 2 - 20,
+                    y:containerWidth / 2,
+                    regX:30,
+                    regY:20,
+                    scale:0
+                },
+                {
+                    img:mobile,
+                    x:containerWidth / 2 - 20,
+                    y:containerWidth / 2 ,
+                    scale:0,
+                    regX:10,
+                    regY:10
+                }
+            ]
+
+
+            WaittingForProduceCom.comId = 0;
+
+            for (let i = 2; i >= 0; i--) {
+                let index = Math.floor(self.r(0, 10)),
+                    height = index > 4 ? 55 : 70;
+                componentsArr.push(new ProduceCom({
+                    img: imgArr[index],
+                    x: (i + 1) * 170,
+                    y: (zHeight - 10 - height) / 2,
+                    scale: 1
+                }));
+            }
+
+
+            ///window.waitingComArr = waitingComArr;
 
             stage.addChild(centerContainer);
 
@@ -501,8 +582,10 @@ window.addEventListener('load', ()=> {
                 }
                 waitingComArr.push(new WaittingForProduceCom({
                     img: imgArr[i],
-                    x: self.r(min, maxW),
-                    y: self.r(0, maxH),
+                    /* x: self.r(min, maxW),
+                     y: self.r(0, maxH),*/
+                    x: WaittingForProduceComPos[i].x,
+                    y: WaittingForProduceComPos[i].y,
                     scale: .8
                 }));
             }
@@ -528,13 +611,16 @@ window.addEventListener('load', ()=> {
             componentsArr.iNow = 0;
 
             function tick(evt) {
+
                 z1_1.dashCmd.offset += 1;
                 z2_1.dashCmd.offset += 1.47;
                 z3_1.dashCmd.offset += 1;
 
 
+                deviceArr.forEach(item=>item.roll());
+
                 componentsArr.iNow++;
-                if (componentsArr.iNow % 400 === 0 && !componentsArr.stop) {
+                if (componentsArr.iNow % 200 === 0 && !componentsArr.stop) {
                     componentsArr.iNow = 0;
                     let index = Math.floor(utilMethods.r(0, 10));
                     let height = index > 4 ? 55 : 70;
@@ -547,7 +633,7 @@ window.addEventListener('load', ()=> {
                 }
                 else {
 
-                    if (componentsArr.iNow % 400 === 0) {
+                    if (componentsArr.iNow % 200 === 0) {
                         componentsArr.stop = false;
                         componentsArr.iNow = 0;
                         let index = Math.floor(utilMethods.r(0, 10));
@@ -563,9 +649,7 @@ window.addEventListener('load', ()=> {
 
                 componentsArr.forEach(c=>c.roll());
                 waitingComArr.forEach(c=>c.roll());
-
                 lineArr.forEach(item => item.roll());
-
                 iNow++;
                 if (iNow % 50 === 0) {
                     iNow = 0;
@@ -609,11 +693,11 @@ window.addEventListener('load', ()=> {
                 $(e.target).addClass("shadow");
 
                 $.ajax({
-                    type:"POST",
-                    url:'http://api.zmiti.com/services/User/list?id=100',
-                    dataType:'jsonp',
+                    type: "POST",
+                    url: 'http://api.zmiti.com/services/User/list?id=100',
+                    dataType: 'jsonp',
                     contentType: 'text/json',
-                    success:function(data){
+                    success: function (data) {
                         alert(data);
                     }
                 })
@@ -712,17 +796,24 @@ window.addEventListener('load', ()=> {
         },
         produce(){//开始加工...
             let self = this;
-            self.cueLine.show();
+            // self.cueLine.show();
             createjs.MotionGuidePlugin.install(createjs.Tween);
             createjs.Tween.get(this.cloudImg, {loop: false}, false)
-                .to({rotation: 14}, 400)
-                .to({rotation: 0}, 400)
-                .to({rotation: -7}, 200)
-                .to({rotation: 0}, 200).call(e=>self.cueLine.hide());
+                .to({scaleX: .5, scaleY: .5, rotation: 10}, 1200, createjs.Ease.elasticOut)
+                .wait(200)
+                .call(()=> {
+                    createjs.Tween.get(this.cloudImg).to({
+                        scaleX: .8,
+                        scaleY: .8,
+                        rotation: 0
+                    }, 1000, createjs.Ease.elasticOut).call(()=>{
+                        this.deviceArr.push(new this.DeviceCom(this.deviceData[2]).ripe());
+                    });
+                });
         },
 
-        r(min, max){
-            return min + (max - min) * Math.random();
+        r(min, max, name){
+            return name ? Math[name](min + (max - min) * Math.random()) : min + (max - min) * Math.random();
         },
 
         loginAction(){
