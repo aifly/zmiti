@@ -181,28 +181,56 @@
                     <section class="fly-login-text">
                         <img src="./statices/images/reg-text.png" draggable="false" alt="">
                     </section>
-                    <div class="fly-reg-input ">
-                        <span class="fly-label">账号</span><span class="fly-v-line"></span><input type="text" class="reg-input" name="reg-username"><label class="mark">123456@qq.com</label>
-                    </div>
-                    <div class="fly-reg-input ">
-                        <span class="fly-label">设置密码</span><span class="fly-v-line"></span><input type="password"  name="reg-pass">
-                    </div>
-                    <div class="fly-reg-input ">
-                        <span class="fly-label">确认密码</span><span class="fly-v-line"></span><input type="password" class="sure-pass">
-                    </div>
-                    <div class="fly-reg-input no-border get-code">
-                        <input type="text" class="sure-pass reg-input"><label style="left: 2%;" class="mark">邮箱/手机号</label><a href="javascript:void(0)" class="fly-get-code">获取验证码</a>
-                    </div>
-                    <div class="fly-reg-input no-border full-width">
-                        <input type="text" class="sure-pass reg-input"  ><label class="mark" style="left:2%;">邮箱/手机号</label>
-                    </div>
+                   <article class="fly-reg-C">
+                       <div class="fly-reg-l">
+                          <div class="reg-title">
+                              <span>请选择</span>
+                              <div></div>
+                          </div>
+                           <div class="reg-type" id="reg-type">
+                               <div class="active"><img draggable="false" src="./statices/images/person.png" alt=""></div>
+                               <div><img draggable="false" src="./statices/images/company.png" alt=""></div>
+                           </div>
+                           <div class="fly-reg-next">
+                               <button>下一步</button>
+                           </div>
+                       </div>
+                       <div class="fly-reg-r">
+                           <section>
+                               <div class="fly-reg-input ">
+                                   <div class="error-msg">账号为6-18位数字和字母的组合</div>
+                                   <span class="fly-label">账号</span><span class="fly-v-line"></span><input  type="text" class="reg-input" name="reg-username"><label class="mark"></label>
+                               </div>
+                               <div class="fly-reg-input company hide">
+                                   <div class="error-msg">公司名称不能为空</div>
+                                   <span class="fly-label">公司名称</span><span class="fly-v-line"></span><input type="text" class="reg-input-company" name="reg-company">
+                               </div>
+                               <div class="fly-reg-input ">
+                                   <div class="error-msg">密码不能小于6位</div>
+                                   <span class="fly-label">设置密码</span><span class="fly-v-line"></span><input type="password"  name="reg-pass">
+                               </div>
+                               <div class="fly-reg-input">
+                                   <div class="error-msg">两次密码不一致</div>
+                                   <span class="fly-label">确认密码</span><span class="fly-v-line"></span><input type="password" class="sure-pass">
+                               </div>
+                               <div class="fly-reg-input no-border full-width">
+                                   <div class="error-msg">手机号或者邮箱格式不正确</div>
+                                   <input type="text" class="sure-pass reg-input" name="reg-email"  ><label class="mark" style="left:2%;">请录入邮箱/手机号</label>
+                               </div>
+                               <div class="fly-reg-input no-border get-code">
+                                   <input type="text" class="sure-pass reg-input" name="reg-tel"><label style="left: 2%;" class="mark">请录入验证码</label><a href="javascript:void(0)" class="fly-get-code">获取验证码</a>
+                               </div>
 
-                    <div class="fly-reg-input no-border agree-clause">
-                        <input id="green" type="checkbox"><label  for="green">我已阅读并同意 <a href="#" class="clause">《智媒体平台服务条款》</a></label>
-                    </div>
-                    <div class="fly-reg-input no-border">
-                        <a class="btn-begin-reg" href="javascript:void(0)">立即注册</a>
-                    </div>
+                               <div class="fly-reg-input no-border  agree-clause">
+                                   <input id="green" type="checkbox"><label  for="green">我已阅读并同意 <a href="#" class="clause">《智媒体平台服务条款》</a></label>
+                               </div>
+                               <div class="fly-reg-input no-border">
+                                   <button class="btn-begin-reg">立即注册</button>
+                               </div>
+                           </section>
+                       </div>
+
+                   </article>
                     <div class="go-login">
                         <a href="javascript:void(0)" class="go-to-login">已有账号？直接登录>></a>
                     </div>
@@ -213,9 +241,9 @@
 </div>
 
 <script src="statices/js/createjs.js" ></script>
-<script src="./statices/js/index.js" onload="var loading =document.getElementById('loading') ;loading.parentNode.removeChild(loading);document.getElementById('main-ui').classList.add('active')"></script>
+<!--<script src="./statices/js/index.js" onload="var loading =document.getElementById('loading') ;loading.parentNode.removeChild(loading);document.getElementById('main-ui').classList.add('active')"></script>-->
 
-<!--<script src="http://localhost:5000/index.js"  onload="var loading =document.getElementById('loading') ;loading.parentNode.removeChild(loading);document.getElementById('main-ui').classList.add('active')"></script>-->
+<script src="http://localhost:5000/index.js"  onload="var loading =document.getElementById('loading') ;loading.parentNode.removeChild(loading);document.getElementById('main-ui').classList.add('active')"></script>
 
 
 </body>

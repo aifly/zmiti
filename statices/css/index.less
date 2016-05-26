@@ -124,6 +124,11 @@ input, textarea {
   -webkit-box-orient: @value;
 }
 
+.displayFlex(@val:column) {
+  display: flex;
+  display: -webkit-flex;
+  flex-flow: @val;
+}
 body {
   font-family: 'Microsoft Yahei', Tahoma, Helvetica, Arial, sans-serif;
   height: 100%;
@@ -298,8 +303,9 @@ body {
     background: rgba(0, 0, 0, .8);
     .fly-login-container{
       width: 350px;
-      height: 420px;
+      height: 480px;
       background: #fff;
+
       .position(a);
       left: 50%;
       top: 50%;
@@ -357,6 +363,7 @@ body {
             top: 20px;
           }
           input {
+
             padding-left: .01rem;
             width: 100%;
             height: 30px;
@@ -377,8 +384,8 @@ body {
 
       }
 
-      overflow: hidden;
-      
+     overflow: hidden;
+
       .fly-login-box{
         z-index:1;
         .transition(.3s);
@@ -389,7 +396,6 @@ body {
           z-index:-1;
         }
       }
-
       .fly-reg-box{
         .transition(.3s);
 
@@ -397,6 +403,94 @@ body {
        // .transitionTimingFunction(cubic-bezier(1, 0, 0, 0.96));
         z-index:-1;
         opacity:0;
+        .fly-reg-C{
+          .transition_transform(.2s);
+          &.active{
+            .transform(translate3d(-50%,0,0));
+          }
+          width:200%;
+          .displayFlex(row);
+          justify-content: center;
+          .fly-reg-l,.fly-reg-r{
+            width:50%;
+          }
+          .fly-reg-r{
+            &>section{
+              width:80%;
+              margin:0 auto;
+              .hide{
+                display: none;
+              }
+            }
+          }
+          .fly-reg-l{
+            .reg-title{
+              width:90%;
+              margin:30px auto;
+              text-align: center;
+              font-size:12px;
+              .position(r);
+              span{
+                display: inline-block;
+                background:#fff;
+                width: 44px;
+                height:20px;
+                line-height:20px;
+                .position(a);
+                top:-10px;
+                left:50%;
+                margin-left:-22px;
+              }
+              div{
+                width:100%;
+                height:1px;
+                .fly-h-gradient-line;
+              }
+            }
+            .reg-type{
+              width:90%;
+              margin:0 auto;
+              .displayFlex(row);
+
+              justify-content: center;
+              div{
+                margin:0 8px;
+                border:1px solid #ccc;
+                .transition(border-color .2s);
+                cursor: pointer;
+                img{
+                  .transition_transform(.2s);
+                }
+
+                &.active{
+                  border-color:#a40b16;
+                  img{
+                    .transform(scale(.9));
+                  }
+                }
+
+              }
+            }
+
+            .fly-reg-next{
+              width:90%;
+              margin:40px auto;
+              text-align: center;
+              button{
+                outline:none;
+                cursor: pointer;
+                width:220px;
+                height:36px;
+                border:none;
+                background: #a40b16;
+                color:#fff;
+                border-radius: 5px;
+              }
+            }
+
+          }
+
+        }
         &.show{
           opacity:1;
           .transform(translate3d(0,0,0));
@@ -404,21 +498,59 @@ body {
         @errorColor:#a40b16;
 
         .fly-reg-input{
-
-          overflow: hidden;
+          width:100% !important;
+        //  overflow: hidden;
           &.error{
             border-color: @errorColor;
             span.fly-label{
               color:@errorColor;
             }
+            label{
+              color:red;
+            }
+            .error-msg{
+              display: block;
+              font-size:12px;
+              .position(a);
+              margin-left:66px;
+              top:-50px;
+              border-radius: 6px;
+              background:#a40b16;
+              padding:4px 8px;
+              color:#fff;
+              z-index:20;
+              &:before{
+                content: '';
+                .position(a);
+                width:20px;
+                height:20px;
+                background: inherit;
+                bottom:-4px;
+                left:40%;
+                z-index: -1;
+                .transform(rotate(45deg))
+              }
+            }
           }
+          .error-msg{
+            display: none;
+
+          }
+
+          input[type='password']{
+            width:196px;
+          }
+          input[name='reg-username']{
+            width:220px;
+          }
+
           &.no-border{
             border:none;
             padding-left:0 !important;
             input{
               border:1px solid #b5b5b5;
               width:63%;
-              height:30px;
+              height:34px;
               border-radius: 3px;
               padding-left:5px;
               box-sizing:border-box;
@@ -472,6 +604,8 @@ body {
               vertical-align: middle;
             }
 
+
+
             font-size:12px;
 
             a{
@@ -480,7 +614,7 @@ body {
           }
 
           box-sizing: border-box;
-          width:70%;
+
           height: 34px;
           line-height:30px;
           padding-left:10px;
@@ -511,15 +645,19 @@ body {
           }
         }
 
-        a.btn-begin-reg{
+
+        button.btn-begin-reg{
           width:100%;
           height:30px;
+          outline: none;
+          border:none;
           display: inline-block;
           background: @errorColor;
           text-align: center;
           color: #fff;
           border-radius: 3px;
           .position(a);
+          cursor: pointer;
         }
 
         .go-login{

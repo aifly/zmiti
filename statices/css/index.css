@@ -214,7 +214,7 @@ body {
 }
 #fly-main .fly-login-mask .fly-login-container {
   width: 350px;
-  height: 420px;
+  height: 480px;
   background: #fff;
   position: absolute;
   left: 50%;
@@ -323,16 +323,105 @@ body {
   z-index: -1;
   opacity: 0;
 }
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box .fly-reg-C {
+  -webkit-transition: -webkit-transform 0.2s;
+  transition: transform 0.2s;
+  width: 200%;
+  display: flex;
+  display: -webkit-flex;
+  flex-flow: row;
+  justify-content: center;
+}
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box .fly-reg-C.active {
+  -webkit-transform: translate3d(-50%, 0, 0);
+  transform: translate3d(-50%, 0, 0);
+}
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box .fly-reg-C .fly-reg-l,
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box .fly-reg-C .fly-reg-r {
+  width: 50%;
+}
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box .fly-reg-C .fly-reg-r > section {
+  width: 80%;
+  margin: 0 auto;
+}
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box .fly-reg-C .fly-reg-r > section .hide {
+  display: none;
+}
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box .fly-reg-C .fly-reg-l .reg-title {
+  width: 90%;
+  margin: 30px auto;
+  text-align: center;
+  font-size: 12px;
+  position: relative;
+}
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box .fly-reg-C .fly-reg-l .reg-title span {
+  display: inline-block;
+  background: #fff;
+  width: 44px;
+  height: 20px;
+  line-height: 20px;
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  margin-left: -22px;
+}
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box .fly-reg-C .fly-reg-l .reg-title div {
+  width: 100%;
+  height: 1px;
+  background: -webkit-gradient(linear, left top, right top, from(rgba(204, 204, 204, 0.2)), color-stop(0.5, #cccccc), to(rgba(204, 204, 204, 0.2)));
+  background: -moz-linear-gradient(left, rgba(204, 204, 204, 0.2), #cccccc 50%, rgba(204, 204, 204, 0.2));
+  background: -ms-linear-gradient(left, rgba(204, 204, 204, 0.2), #cccccc 50%, rgba(204, 204, 204, 0.2));
+}
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box .fly-reg-C .fly-reg-l .reg-type {
+  width: 90%;
+  margin: 0 auto;
+  display: flex;
+  display: -webkit-flex;
+  flex-flow: row;
+  justify-content: center;
+}
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box .fly-reg-C .fly-reg-l .reg-type div {
+  margin: 0 8px;
+  border: 1px solid #ccc;
+  -webkit-transition: border-color 0.2s;
+  transition: border-color 0.2s;
+  cursor: pointer;
+}
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box .fly-reg-C .fly-reg-l .reg-type div img {
+  -webkit-transition: -webkit-transform 0.2s;
+  transition: transform 0.2s;
+}
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box .fly-reg-C .fly-reg-l .reg-type div.active {
+  border-color: #a40b16;
+}
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box .fly-reg-C .fly-reg-l .reg-type div.active img {
+  -webkit-transform: scale(0.9);
+  transform: scale(0.9);
+}
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box .fly-reg-C .fly-reg-l .fly-reg-next {
+  width: 90%;
+  margin: 40px auto;
+  text-align: center;
+}
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box .fly-reg-C .fly-reg-l .fly-reg-next button {
+  outline: none;
+  cursor: pointer;
+  width: 220px;
+  height: 36px;
+  border: none;
+  background: #a40b16;
+  color: #fff;
+  border-radius: 5px;
+}
 #fly-main .fly-login-mask .fly-login-container .fly-reg-box.show {
   opacity: 1;
   -webkit-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
 }
 #fly-main .fly-login-mask .fly-login-container .fly-reg-box .fly-reg-input {
-  overflow: hidden;
+  width: 100% !important;
   position: relative;
   box-sizing: border-box;
-  width: 70%;
   height: 34px;
   line-height: 30px;
   padding-left: 10px;
@@ -346,6 +435,42 @@ body {
 #fly-main .fly-login-mask .fly-login-container .fly-reg-box .fly-reg-input.error span.fly-label {
   color: #a40b16;
 }
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box .fly-reg-input.error label {
+  color: red;
+}
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box .fly-reg-input.error .error-msg {
+  display: block;
+  font-size: 12px;
+  position: absolute;
+  margin-left: 66px;
+  top: -50px;
+  border-radius: 6px;
+  background: #a40b16;
+  padding: 4px 8px;
+  color: #fff;
+  z-index: 20;
+}
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box .fly-reg-input.error .error-msg:before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: inherit;
+  bottom: -4px;
+  left: 40%;
+  z-index: -1;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box .fly-reg-input .error-msg {
+  display: none;
+}
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box .fly-reg-input input[type='password'] {
+  width: 196px;
+}
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box .fly-reg-input input[name='reg-username'] {
+  width: 220px;
+}
 #fly-main .fly-login-mask .fly-login-container .fly-reg-box .fly-reg-input.no-border {
   border: none;
   padding-left: 0 !important;
@@ -353,7 +478,7 @@ body {
 #fly-main .fly-login-mask .fly-login-container .fly-reg-box .fly-reg-input.no-border input {
   border: 1px solid #b5b5b5;
   width: 63%;
-  height: 30px;
+  height: 34px;
   border-radius: 3px;
   padding-left: 5px;
   box-sizing: border-box;
@@ -423,15 +548,18 @@ body {
   background: transparent;
   border: none;
 }
-#fly-main .fly-login-mask .fly-login-container .fly-reg-box a.btn-begin-reg {
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box button.btn-begin-reg {
   width: 100%;
   height: 30px;
+  outline: none;
+  border: none;
   display: inline-block;
   background: #a40b16;
   text-align: center;
   color: #fff;
   border-radius: 3px;
   position: absolute;
+  cursor: pointer;
 }
 #fly-main .fly-login-mask .fly-login-container .fly-reg-box .go-login {
   width: 95%;

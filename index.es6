@@ -50,7 +50,8 @@ window.addEventListener('load', ()=> {
         loginBox: $('#fly-main .fly-login-box'),
         animationEnd: 'onwebkitanimationend' in window ? 'webkitAnimationEnd' : 'animationend',
         transitionEnd: 'onwebkittransitionend' in window ? 'webkitTransitionEnd' : 'transitionend',
-        baseUrl: 'http://api.zmiti.com/SmartMedia/services/'
+        regType: $("#reg-type"),
+        baseUrl: 'http://webapi.zmiti.com/api/'
     };
 
     let utilMethods = {
@@ -156,9 +157,9 @@ window.addEventListener('load', ()=> {
                 deviceArr = [],
                 imgArr = [a, v, i, t, v1, zAi, zE, zI, zM, zPs, zT];
             this.deviceArr = deviceArr,
-            shapeArr.forEach(item=> {
-                centerContainer.addChild(item);
-            });
+                shapeArr.forEach(item=> {
+                    centerContainer.addChild(item);
+                });
 
             class Z1FlyLine {
                 constructor(option) {
@@ -469,7 +470,7 @@ window.addEventListener('load', ()=> {
             class DeviceCom extends Components {
                 constructor(option) {
                     super(option);
-                    [this.speedX, this.speedY,this.isStart] = [-1, 1,false];
+                    [this.speedX, this.speedY, this.isStart] = [-1, 1, false];
                 }
 
                 draw() {//
@@ -482,16 +483,18 @@ window.addEventListener('load', ()=> {
 
                     centerContainer.addChildAt(img, centerContainer.getChildIndex(cloudImg) + 1);
                 }
-                ripe(){
+
+                ripe() {
                     createjs.Tween.get(this.img)
-                    .to({scaleX:1,scaleY:1},700,createjs.Ease.elasticOut).call(()=>{
+                        .to({scaleX: 1, scaleY: 1}, 700, createjs.Ease.elasticOut).call(()=> {
                         this.isStart = true;
                     });
 
                     return this;
                 }
+
                 roll() {
-                    if(!this.img || !this.isStart){
+                    if (!this.img || !this.isStart) {
                         return;
                     }
                     this.img.x += this.speedX;
@@ -499,13 +502,14 @@ window.addEventListener('load', ()=> {
                     if (this.img.y > z3.y + 30) {
                         this.speedY = 0;
                         this.speedX = 1;
-                        if(this.img.x > containerWidth - 20){
+                        if (this.img.x > containerWidth - 20) {
                             this.speedX = 0;
                             this.die();
                         }
                     }
                 }
-                die(){
+
+                die() {
                     centerContainer.removeChild(this.img);
                     this.img = null;
                     deviceArr.shift();
@@ -515,28 +519,28 @@ window.addEventListener('load', ()=> {
 
             this.deviceData = [
                 {
-                    img:pc,
-                    x:containerWidth / 2 - 60,
-                    y:containerWidth / 2,
-                    regX:60,
-                    regY:20,
-                    scale:0
+                    img: pc,
+                    x: containerWidth / 2 - 60,
+                    y: containerWidth / 2,
+                    regX: 60,
+                    regY: 20,
+                    scale: 0
                 },
                 {
-                    img:pad,
-                    x:containerWidth / 2 - 20,
-                    y:containerWidth / 2,
-                    regX:30,
-                    regY:20,
-                    scale:0
+                    img: pad,
+                    x: containerWidth / 2 - 20,
+                    y: containerWidth / 2,
+                    regX: 30,
+                    regY: 20,
+                    scale: 0
                 },
                 {
-                    img:mobile,
-                    x:containerWidth / 2 - 20,
-                    y:containerWidth / 2 ,
-                    scale:0,
-                    regX:10,
-                    regY:10
+                    img: mobile,
+                    x: containerWidth / 2 - 20,
+                    y: containerWidth / 2,
+                    scale: 0,
+                    regX: 10,
+                    regY: 10
                 }
             ]
 
@@ -681,7 +685,9 @@ window.addEventListener('load', ()=> {
             data.goToReg.on("click", ()=> {
                 data.loginBox.addClass('hide');
                 data.regBox.addClass('show');
+                $('.fly-reg-C').removeClass('active');
             });
+
 
             data.goToLogin.on('click', ()=> {
                 data.loginBox.removeClass('hide');
@@ -691,16 +697,30 @@ window.addEventListener('load', ()=> {
 
             data.btnOK.on('mousedown', (e)=> {
                 $(e.target).addClass("shadow");
-
                 $.ajax({
-                    type: "POST",
-                    url: 'http://api.zmiti.com/services/User/list?id=100',
-                    dataType: 'jsonp',
-                    contentType: 'text/json',
-                    success: function (data) {
-                        alert(data);
+                    url: data.baseUrl + "user/Login",
+                    type: "GET",
+                    data: {
+                        name: $("input[name='username']").val(),
+                        pwd: $("input[name='pwd']").val()
+                    },
+                    success(d){
+                        if (d.status === 1) {
+                            data.loginMask.removeClass('show');
+                            var a = document.createElement('a');
+                            document.body.appendChild(a);
+                            a.href = 'http://aifly.github.io/ZPlatform';
+                            a.target = '_blank';
+                            a.style.position = 'fixed';
+                            a.style.zIndex = -1;
+                            a.style.opacity = 0;
+                            a.click();
+                        }
+                        else {
+                            alert('登录失败');
+                        }
                     }
-                })
+                });
 
             }).on('mouseup', (e)=> {
                 $(e.target).removeClass("shadow").addClass("hide").parent().find('.loading').addClass("show");
@@ -717,28 +737,159 @@ window.addEventListener('load', ()=> {
                 }
             });
 
+            let pattern = /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/,
+                reg = /^0?1[3|4|5|8][0-9]\d{8}$/;
+            $('input[name="reg-email"]').on('focus', (e)=> {
+                $(e.target).parents('.fly-reg-input').removeClass('error');
+                $(e.target).val().length <= 0 && $(e.target).siblings('.mark').addClass('blur');
+            }).on('blur', (e)=> {
+                if (!pattern.test($(e.target).val().trim()) && !reg.test($(e.target).val().trim())) {
+                    $(e.target).parents('.fly-reg-input').addClass("error");
+                }
+                $(e.target).val().length <= 0 && $(e.target).siblings('.mark').removeClass('blur');
+            });
+
+
+            let company = 1;
+
+            $(".fly-get-code").on("click", ()=> {//发送验证码。
+                let reg = /^0?1[3|4|5|8][0-9]\d{8}$/;
+                if (!reg.test($('input[name="reg-email"]').val())) {
+                    $('.fly-reg-input').eq(4).addClass("error");
+                    this.removeErrorInfo($('.fly-reg-input').eq(4));
+                    return false;
+                }
+                //开始获取验证码...
+
+            });
+
+            $('.btn-begin-reg').on('click', ()=> {//开始注册。
+
+                let dd = {
+                    name: $('input[name="reg-username"]').val(),
+                    pwd: $('input[name="reg-pass"]').val(),
+                    email: $('input[name="reg-email"]').val(),
+                    mobile: '15718879215',
+                    type: company,
+                    companyname:$('input[name="reg-company"]').val()
+                }
+
+                let pattern = /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/,
+                    reg = /^0?1[3|4|5|8][0-9]\d{8}$/,
+                    isMobile = false;
+
+
+                if (dd.name.length <= 0 || dd.name.length > 18) {
+                    $(".fly-reg-input").eq(0).addClass('error');
+                    this.removeErrorInfo($('.fly-reg-input').eq(0));
+                    return;
+                }
+
+                if (dd.companyname.length <= 0) {
+                    $(".fly-reg-input").eq(1).addClass('error');
+                    this.removeErrorInfo($('.fly-reg-input').eq(1));
+                    return false;
+                }
+
+                if (dd.pwd.length < 6) {
+                    $(".fly-reg-input").eq(2).addClass('error');
+                    this.removeErrorInfo($('.fly-reg-input').eq(2));
+                     return false;
+                }
+
+                if (dd.pwd !== $('.sure-pass').val()) {
+                    $('.fly-reg-input').eq(3).addClass("error");
+                    this.removeErrorInfo($('.fly-reg-input').eq(3));
+
+                    return false;
+                }
+
+                if (!pattern.test(dd.email) && !reg.test(dd.email)) {
+                    $('.fly-reg-input').eq(4).addClass("error");
+                    this.removeErrorInfo($('.fly-reg-input').eq(4));
+                    return false;
+                }
+
+                $(".fly-reg-input").eq(2).removeClass('error');
+
+
+                if (!$('#green')[0].checked) {
+                    $('.agree-clause').addClass('error');
+                    this.removeErrorInfo($('.agree-clause'));
+                    return false;
+                }
+
+                $.ajax({
+                    url: data.baseUrl + 'user/Register',
+                    type: "POST",
+                    data: dd,
+                    success(d){
+                        if (d.status === 1) {//成功
+                            //data.loginMask.removeClass('show');
+                            data.goToLogin.trigger('click');
+                        }
+                    }
+                })
+            });
+
             data.regBtn.on("click", ()=> {
                 data.loginMask.addClass('show');
 
                 data.regBtn[0].btn = data.regBtn[0].btn || 1;
 
                 data.goToReg.trigger("click");
-
+                $('.fly-reg-C').removeClass('active');
                 if (data.regBtn[0].btn === 1) {
                     data.regBtn[0].btn = 2;
                     this.loginAction();
-
                 }
             });
 
+          ///  data.regBtn.trigger('click')
 
+
+            data.regType.on('click', (e)=> {
+                let index = $(e.target).parent('div').index();
+                $('.company')[index === 1 ? 'removeClass' : 'addClass']('hide');
+                company = index === 1 ? 2 : 1;
+                $('div', data.regType).removeClass("active").eq(index).addClass('active');
+            });
+
+            $('.fly-reg-next').on('click', (e)=> {
+                $('.fly-reg-C').addClass('active');
+            });
             // data.regBtn.trigger('click');
 
-
+            $('.error').on('click', function () {
+                $(this).removeClass('error');
+                $(this).find('input').trigger('focus');
+            });
             $('.reg-input').on('focus', (e)=> {
+                $(e.target).parents('.fly-reg-input').removeClass('error');
                 $(e.target).val().length <= 0 && $(e.target).siblings('.mark').addClass('blur');
             }).on('blur', (e)=> {
+                if ($(e.target).val().trim().length < 6 || $(e.target).val().trim().length > 18) {
+                    $(e.target).parents('.fly-reg-input').addClass("error");
+                    this.removeErrorInfo($(e.target).parents('.fly-reg-input'))
+
+                }
+                $(e.target).val().length <= 0 && $(e.target).siblings('.mak').removeClass('blur');
+            });
+
+            $('input[name="reg-pass"]').on('focus', (e)=> {
+                $(e.target).parents('.fly-reg-input').removeClass('error');
+                $(e.target).val().length <= 0 && $(e.target).siblings('.mark').addClass('blur');
+            }).on('blur', (e)=> {
+                if ($(e.target).val().trim().length < 6) {
+                    $(e.target).parents('.fly-reg-input').addClass("error");
+                    this.removeErrorInfo($(e.target).parents('.fly-reg-input'))
+                }
                 $(e.target).val().length <= 0 && $(e.target).siblings('.mark').removeClass('blur');
+            });
+
+            $('.sure-pass').on('focus', (e)=> {
+                $(e.target).parents('.fly-reg-input').removeClass('error');
+                $(e.target).val().length <= 0 && $(e.target).siblings('.mark').addClass('blur');
             });
 
             $(".close").on('click', ()=> {
@@ -771,6 +922,12 @@ window.addEventListener('load', ()=> {
 
 
         },
+        removeErrorInfo(obj){
+            setTimeout(()=> {
+                obj.removeClass("error");
+            }, 2000)
+        },
+
         getFXBitmap(source, filters, x, y, w, h) {
             // cache the source, so we can grab a rasterized image of it:
             source.cache(x, y, w, h);
@@ -806,7 +963,7 @@ window.addEventListener('load', ()=> {
                         scaleX: .8,
                         scaleY: .8,
                         rotation: 0
-                    }, 1000, createjs.Ease.elasticOut).call(()=>{
+                    }, 1000, createjs.Ease.elasticOut).call(()=> {
                         this.deviceArr.push(new this.DeviceCom(this.deviceData[2]).ripe());
                     });
                 });
