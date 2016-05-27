@@ -696,7 +696,21 @@ window.addEventListener('load', ()=> {
 
 
             data.btnOK.on('mousedown', (e)=> {
+
+                if(data.username.val().length <=0 ){
+                    $('.input-box').eq(0).addClass("error");
+                    this.removeErrorInfo($('.input-box').eq(0))
+                    return false;
+                }
+                if(data.password.val().length <=0){
+                    $('.input-box').eq(1).addClass("error");
+                    this.removeErrorInfo($('.input-box').eq(1));
+                    return false;
+                }
+
                 $(e.target).addClass("shadow");
+
+                let self = this;
                 $.ajax({
                     url: data.baseUrl + "user/Login",
                     type: "GET",
@@ -717,12 +731,20 @@ window.addEventListener('load', ()=> {
                             a.click();
                         }
                         else {
-                            alert('登录失败');
+                            $(".login-error-info").addClass("fail");
+                            self.removeErrorInfo($(".login-error-info"),"fail");
+                            $(e.target).removeClass("shadow").removeClass("hide").parent().find('.loading').removeClass("show");
                         }
                     }
                 });
 
             }).on('mouseup', (e)=> {
+                if(data.username.val().length <=0 ){
+                    return false;
+                }
+                if(data.password.val().length <=0){
+                    return false;
+                }
                 $(e.target).removeClass("shadow").addClass("hide").parent().find('.loading').addClass("show");
             });
 
@@ -922,9 +944,9 @@ window.addEventListener('load', ()=> {
 
 
         },
-        removeErrorInfo(obj){
+        removeErrorInfo(obj,className='error'){
             setTimeout(()=> {
-                obj.removeClass("error");
+                obj.removeClass(className);
             }, 2000)
         },
 
@@ -1023,6 +1045,12 @@ window.addEventListener('load', ()=> {
                         isBack: true
                     })
                 }
+            }).on('keydown',(e)=>{
+                if(e.keyCode === 13){
+                    data.btnOK.trigger('mousedown');
+                    data.btnOK.trigger('mouseup');
+                }
+                //data.btnOK.trigger('click');
             });
         },
 

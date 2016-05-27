@@ -138,14 +138,16 @@
                     <section class="fly-login-text">
                         <img src="./statices/images/login-text.png" draggable="false" alt="">
                     </section>
-                    <div class="fly-username input-box">
+                    <div class="fly-username input-box ">
                         <canvas id="canvas" height="20" ></canvas>
                         <span class="placeholder">账号</span>
+                        <div class="fly-tips">账号不能空！</div>
                         <input type="text" name="username" autocomplete="off">
                     </div>
-                    <div class="fly-pwd input-box">
+                    <div class="fly-pwd input-box ">
                         <canvas id="canvas-pwd" height="20" ></canvas>
                         <span class="placeholder">密码</span>
+                        <div class="fly-tips">密码不能空！</div>
                         <input type="password" name="pwd" autocomplete="off">
                     </div>
                     <div class="login-btn loaded">
@@ -157,6 +159,7 @@
                             <div></div>
                         </div>
                     </div>
+                    <div class="login-error-info">账号或者密码错误<span>&times;</span></div>
                     <div class="fly-line">
 
                     </div>

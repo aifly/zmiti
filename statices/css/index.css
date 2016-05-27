@@ -303,6 +303,71 @@ body {
   top: 10px;
   transition: .4s;
   color: #ccc;
+  font-size: 16px;
+}
+#fly-main .fly-login-mask .fly-login-container .fly-login-box .input-box .fly-tips,
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box .input-box .fly-tips {
+  display: none;
+}
+#fly-main .fly-login-mask .fly-login-container .fly-login-box .input-box.error .placeholder,
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box .input-box.error .placeholder {
+  color: #a40b16;
+}
+#fly-main .fly-login-mask .fly-login-container .fly-login-box .input-box.error .fly-tips,
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box .input-box.error .fly-tips {
+  display: block !important;
+  font-size: 12px;
+  position: absolute;
+  left: 20%;
+  background: #a40b16;
+  color: #fff;
+  height: 20px;
+  top: -30px;
+  line-height: 20px;
+  border-radius: 5px;
+  padding: 4px 9px;
+}
+#fly-main .fly-login-mask .fly-login-container .fly-login-box .input-box.error .fly-tips:before,
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box .input-box.error .fly-tips:before {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: inherit;
+  bottom: -5px;
+  left: 20%;
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+#fly-main .fly-login-mask .fly-login-container .fly-login-box .fail,
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box .fail {
+  -webkit-transform: translate3d(0, 0, 0) !important;
+  transform: translate3d(0, 0, 0) !important;
+}
+#fly-main .fly-login-mask .fly-login-container .fly-login-box .login-error-info,
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box .login-error-info {
+  position: absolute;
+  -webkit-transition: -webkit-transform 0.2s;
+  transition: transform 0.2s;
+  left: 0;
+  bottom: 0;
+  -webkit-transform: translate3d(0, 100%, 0);
+  transform: translate3d(0, 100%, 0);
+  font-size: 16px;
+  color: #fff;
+  background: #a40b16;
+  width: 100%;
+  text-align: center;
+  height: 30px;
+  line-height: 30px;
+}
+#fly-main .fly-login-mask .fly-login-container .fly-login-box .login-error-info span,
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box .login-error-info span {
+  display: inline-block;
+  box-sizing: border-box;
+  -webkit-transform: scale(1.8);
+  transform: scale(1.8);
+  margin-left: 4px;
 }
 #fly-main .fly-login-mask .fly-login-container .fly-login-box {
   z-index: 1;
@@ -581,8 +646,8 @@ body {
   position: relative;
 }
 #fly-main .fly-login-mask .login-btn span {
-  -webkit-transition: -webkit-transform 0.8s ease;
-  transition: transform 0.8s ease;
+  -webkit-transition: -webkit-transform 0.5s ease;
+  transition: transform 0.5s ease;
   color: #fff;
   background: #a40b16;
   display: inline-block;
@@ -613,9 +678,8 @@ body {
   font-size: 18px;
 }
 #fly-main .fly-login-mask .login-btn .loading {
-  -webkit-transition: -webkit-transform 0.4s ease;
-  transition: transform 0.4s ease;
-  opacity: 0;
+  -webkit-transition: -webkit-transform 0.2s ease;
+  transition: transform 0.2s ease;
   -webkit-transform: translate3d(270px, 0, 0);
   transform: translate3d(270px, 0, 0);
   background: #a40b16;
@@ -629,7 +693,6 @@ body {
   line-height: 36px;
 }
 #fly-main .fly-login-mask .login-btn .loading.show {
-  opacity: 1;
   -webkit-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
 }

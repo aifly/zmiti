@@ -379,8 +379,72 @@ body {
             top: 10px;
             transition: .4s;
             color: #ccc;
+            font-size:16px;
+          }
+          .fly-tips{
+            display: none;
+          }
+          &.error{
+            .placeholder{
+              color:#a40b16;
+            }
+            .fly-tips{
+              display: block !important;
+              font-size:12px;
+              .position(a);
+              left:20%;
+              background:#a40b16;
+              color:#fff;
+              height:20px;
+              top:-30px;
+              line-height:20px;
+              border-radius: 5px;
+              padding:4px 9px;
+              &:before{
+                content: '';
+                .position(a);
+                width:10px;
+                height:10px;
+                background: inherit;
+                bottom:-5px;
+                left:20%;
+                .transform(rotate(45deg));
+              }
+
+            }
           }
         }
+
+
+        .fail{
+          .transform(translate3d(0,0,0)) !important;
+        }
+        .login-error-info{
+
+          .position(a);
+          .transition_transform(.2s);
+          left:0;
+          bottom:0;
+          .transform(translate3d(0,100%,0));
+
+          font-size:16px;
+          color:#fff;
+          background:#a40b16;
+          width:100%;
+          text-align: center;
+          height:30px;
+          line-height: 30px;
+          span{
+
+            display: inline-block;
+            box-sizing: border-box;
+            .transform(scale(1.8));
+            margin-left:4px;
+          }
+
+        }
+
+
 
       }
 
@@ -684,7 +748,7 @@ body {
       .position(r);
       overflow: hidden;
       span {
-        .transition_transform(.8s ease);
+        .transition_transform(.5s ease);
         &.hide{
           .transform(translate3d(-300px,0,0));
         }
@@ -718,11 +782,10 @@ body {
       .position(r);
       .loading{
 
-        .transition_transform(.4s ease);
-        opacity:0;
+        .transition_transform(.2s ease);
+
         .transform(translate3d(270px,0,0));
         &.show{
-          opacity:1;
           .transform(translate3d(0,0,0));
         }
 
