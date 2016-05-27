@@ -721,10 +721,18 @@ window.addEventListener('load', ()=> {
                     success(d){
                         if (d.status === 1) {
                             data.loginMask.removeClass('show');
+
+
+                        /*   var domain = 'http://localhost:3000';
+
+                            var myPopup = window.open(domain + '/index.html','_self');
+
+                            myPopup.postMessage('asd',domain);*/
+
                             var a = document.createElement('a');
                             document.body.appendChild(a);
-                            a.href = 'http://aifly.github.io/ZPlatform';
-                            a.target = '_blank';
+
+                            a.href = 'http://localhost:3000/index.html';
                             a.style.position = 'fixed';
                             a.style.zIndex = -1;
                             a.style.opacity = 0;
