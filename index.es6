@@ -723,11 +723,11 @@ window.addEventListener('load', ()=> {
                             data.loginMask.removeClass('show');
 
 
-                        /*   var domain = 'http://localhost:3000';
+                         var domain = 'http://localhost:3000';
 
-                            var myPopup = window.open(domain + '/index.html','_self');
+                            var myPopup = window.open(domain + '/index.html');
 
-                            myPopup.postMessage('asd',domain);*/
+                            myPopup.postMessage('asd',domain);
 
                             var a = document.createElement('a');
                             document.body.appendChild(a);
@@ -758,6 +758,11 @@ window.addEventListener('load', ()=> {
 
             data.loginBtn.on("click", ()=> {
                 data.loginMask.addClass('show');
+                setTimeout(()=>{
+                    let aSpan = $('.input-box .placeholder');
+                    this.triggerSinLine(aSpan);
+                    data.username.trigger('focus')
+                },300);
                 data.loginBtn[0].btn = data.loginBtn[0].btn || 1;
                 data.goToLogin.trigger("click");
                 if (data.loginBtn[0].btn === 1) {
@@ -1003,16 +1008,20 @@ window.addEventListener('load', ()=> {
             return name ? Math[name](min + (max - min) * Math.random()) : min + (max - min) * Math.random();
         },
 
+        triggerSinLine(aSpan){
+            aSpan.eq(0).css('transform', 'scale(.8) translate(-10px,-30px)');
+            this.sinLine({
+                canvas: data.userCanvas,
+                input: data.username
+            })
+        },
+
         loginAction(){
             let all = data.login.find("*");
             let aSpan = $('.input-box .placeholder');
             data.username.on("focus", ()=> {
                 if (data.username.val().length <= 0) {
-                    aSpan.eq(0).css('transform', 'scale(.8) translate(-10px,-30px)');
-                    this.sinLine({
-                        canvas: data.userCanvas,
-                        input: data.username
-                    })
+                    this.triggerSinLine(aSpan)
                 }
 
             }).on('blur', ()=> {

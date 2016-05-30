@@ -19,6 +19,7 @@
     "gulp-plumber": "^1.1.0",
     "gulp-watch": "^4.3.5",
     "jquery": "^2.2.4",
+    "jquery.cookie": "^1.4.1",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.1",
