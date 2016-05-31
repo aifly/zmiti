@@ -20,7 +20,6 @@ import zI from './statices/images/z-i.png';
 import zM from './statices/images/z-m.png';
 import zPs from './statices/images/z-ps.png';
 import zT from './statices/images/z-t.png';
-
 //console.log(cCenter,pc,a,c,i,mobile,pad,t,v,v1,zAi,zE,zI,zM,zPs,zT);
 
 
@@ -51,7 +50,7 @@ window.addEventListener('load', ()=> {
         animationEnd: 'onwebkitanimationend' in window ? 'webkitAnimationEnd' : 'animationend',
         transitionEnd: 'onwebkittransitionend' in window ? 'webkitTransitionEnd' : 'transitionend',
         regType: $("#reg-type"),
-        baseUrl: 'http://webapi.zmiti.com/api/'
+        baseUrl: 'http://webapi.zmiti.com/v1/'
     };
 
     let utilMethods = {
@@ -673,6 +672,8 @@ window.addEventListener('load', ()=> {
                     }
                 }
                 stage.update(evt);
+
+
             }
 
             //  self.loginAction();
@@ -695,14 +696,13 @@ window.addEventListener('load', ()=> {
             });
 
 
-            data.btnOK.on('mousedown', (e)=> {
-
-                if(data.username.val().length <=0 ){
+            data.btnOK.on('mousedown', (e)=> { //开始登录
+                if (data.username.val().length <= 0) {
                     $('.input-box').eq(0).addClass("error");
                     this.removeErrorInfo($('.input-box').eq(0))
                     return false;
                 }
-                if(data.password.val().length <=0){
+                if (data.password.val().length <= 0) {
                     $('.input-box').eq(1).addClass("error");
                     this.removeErrorInfo($('.input-box').eq(1));
                     return false;
@@ -711,23 +711,30 @@ window.addEventListener('load', ()=> {
                 $(e.target).addClass("shadow");
 
                 let self = this;
+
                 $.ajax({
-                    url: data.baseUrl + "user/Login",
-                    type: "GET",
+                    url: data.baseUrl + "user/login_user",
+                    type: "POST",
                     data: {
-                        name: $("input[name='username']").val(),
-                        pwd: $("input[name='pwd']").val()
+                        username: $("input[name='username']").val(),
+                        userpwd: $("input[name='pwd']").val(),
+                        userlogip: $("#keleyivisitorip").html()
                     },
                     success(d){
-                        if (d.status === 1) {
+                        if (d.getret === 0) {
                             data.loginMask.removeClass('show');
 
+                            document.cookie =  d.getusersigid;
 
-                         var domain = 'http://localhost:3000';
+//                            var domain = 'http://localhost:3000';
 
-                            var myPopup = window.open(domain + '/index.html');
 
-                            myPopup.postMessage('asd',domain);
+
+                          /*  var myPopup = window.open(domain + '/index.html','_self');
+
+                           myPopup.postMessage('asd', domain);
+*/
+
 
                             var a = document.createElement('a');
                             document.body.appendChild(a);
@@ -738,19 +745,22 @@ window.addEventListener('load', ()=> {
                             a.style.opacity = 0;
                             a.click();
                         }
-                        else {
+                        else if(d.getret === 1300){
                             $(".login-error-info").addClass("fail");
-                            self.removeErrorInfo($(".login-error-info"),"fail");
+                            self.removeErrorInfo($(".login-error-info"), "fail");
                             $(e.target).removeClass("shadow").removeClass("hide").parent().find('.loading').removeClass("show");
+                        }
+                        else if(d.getret === -101){
+                            alert('系统错误！');
                         }
                     }
                 });
 
             }).on('mouseup', (e)=> {
-                if(data.username.val().length <=0 ){
+                if (data.username.val().length <= 0) {
                     return false;
                 }
-                if(data.password.val().length <=0){
+                if (data.password.val().length <= 0) {
                     return false;
                 }
                 $(e.target).removeClass("shadow").addClass("hide").parent().find('.loading').addClass("show");
@@ -758,11 +768,11 @@ window.addEventListener('load', ()=> {
 
             data.loginBtn.on("click", ()=> {
                 data.loginMask.addClass('show');
-                setTimeout(()=>{
+                setTimeout(()=> {
                     let aSpan = $('.input-box .placeholder');
                     this.triggerSinLine(aSpan);
                     data.username.trigger('focus')
-                },300);
+                }, 300);
                 data.loginBtn[0].btn = data.loginBtn[0].btn || 1;
                 data.goToLogin.trigger("click");
                 if (data.loginBtn[0].btn === 1) {
@@ -772,16 +782,15 @@ window.addEventListener('load', ()=> {
                 }
             });
 
-            let pattern = /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/,
-                reg = /^0?1[3|4|5|8][0-9]\d{8}$/;
-            $('input[name="reg-email"]').on('focus', (e)=> {
-                $(e.target).parents('.fly-reg-input').removeClass('error');
-                $(e.target).val().length <= 0 && $(e.target).siblings('.mark').addClass('blur');
-            }).on('blur', (e)=> {
-                if (!pattern.test($(e.target).val().trim()) && !reg.test($(e.target).val().trim())) {
-                    $(e.target).parents('.fly-reg-input').addClass("error");
-                }
-                $(e.target).val().length <= 0 && $(e.target).siblings('.mark').removeClass('blur');
+            $('#green').on("change", (e)=> {
+
+                successArr[e.target.checked ? 'add' : 'remove']('green');
+
+                $('.btn-begin-reg')[successArr.length === (company === 1 ? 6 : 7) ? "removeClass" : "addClass"]('disabled')
+            });
+
+            $('.get-code input').on('blur', e=> {
+                successArr[e.target.value.length > 0 ? 'add' : 'remove']('code');
             });
 
 
@@ -798,54 +807,59 @@ window.addEventListener('load', ()=> {
 
             });
 
-            $('.btn-begin-reg').on('click', ()=> {//开始注册。
 
-                let dd = {
-                    name: $('input[name="reg-username"]').val(),
-                    pwd: $('input[name="reg-pass"]').val(),
-                    email: $('input[name="reg-email"]').val(),
-                    mobile: '15718879215',
-                    type: company,
-                    companyname:$('input[name="reg-company"]').val()
+            $('.btn-begin-reg').on('click', ()=> {//开始注册。
+                let email = $('input[name="reg-email"]'),
+                    vType = 'usermobile';
+
+                if (email.val().indexOf('@') > -1) {
+                    vType = 'useremail';
                 }
+                let dd = {
+                    username: $('input[name="reg-username"]').val(),
+                    userpwd: $('input[name="reg-pass"]').val(),
+                    usertypesign: company,
+                    companyname: $('input[name="reg-company"]').val()
+                };
+                dd.useremail = email.val().indexOf('@') > -1 ? email.val() : '';
+                dd.usermobile = email.val().indexOf('@') > -1 ? '' : email.val();
 
                 let pattern = /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/,
-                    reg = /^0?1[3|4|5|8][0-9]\d{8}$/,
-                    isMobile = false;
+                    reg = /^0?1[3|4|5|8][0-9]\d{8}$/;
 
 
-                if (dd.name.length <= 0 || dd.name.length > 18) {
+                if (dd.username.length <= 0 || dd.username.length > 18) {
                     $(".fly-reg-input").eq(0).addClass('error');
                     this.removeErrorInfo($('.fly-reg-input').eq(0));
                     return;
                 }
 
-                if (dd.companyname.length <= 0) {
+                if (company === 2 && dd.companyname.length <= 0) {
                     $(".fly-reg-input").eq(1).addClass('error');
                     this.removeErrorInfo($('.fly-reg-input').eq(1));
                     return false;
                 }
 
-                if (dd.pwd.length < 6) {
+
+                if (dd.userpwd.length < 6) {
                     $(".fly-reg-input").eq(2).addClass('error');
                     this.removeErrorInfo($('.fly-reg-input').eq(2));
-                     return false;
-                }
-
-                if (dd.pwd !== $('.sure-pass').val()) {
-                    $('.fly-reg-input').eq(3).addClass("error");
-                    this.removeErrorInfo($('.fly-reg-input').eq(3));
-
                     return false;
                 }
 
-                if (!pattern.test(dd.email) && !reg.test(dd.email)) {
+                if (dd.userpwd !== $('.sure-pass').val()) {
+                    $('.fly-reg-input').eq(3).addClass("error");
+                    this.removeErrorInfo($('.fly-reg-input').eq(3));
+                    return false;
+                }
+
+
+                if (!pattern.test(dd[vType]) && !reg.test(dd[vType])) {
+
                     $('.fly-reg-input').eq(4).addClass("error");
                     this.removeErrorInfo($('.fly-reg-input').eq(4));
                     return false;
                 }
-
-                $(".fly-reg-input").eq(2).removeClass('error');
 
 
                 if (!$('#green')[0].checked) {
@@ -853,18 +867,44 @@ window.addEventListener('load', ()=> {
                     this.removeErrorInfo($('.agree-clause'));
                     return false;
                 }
+                ;
 
+                $(".fly-reg-input").eq(2).removeClass('error');
+
+                $(".reg-info").addClass('info').html('开始注册...');
+
+                ///data.baseUrl='http://localhost:23627/v1/'
                 $.ajax({
-                    url: data.baseUrl + 'user/Register',
+                    url: data.baseUrl + 'user/create_user/',
                     type: "POST",
                     data: dd,
                     success(d){
-                        if (d.status === 1) {//成功
+                        if (d.getret === 0) {//成功
                             //data.loginMask.removeClass('show');
                             data.goToLogin.trigger('click');
+                            $(".reg-info").removeClass('info').addClass('success').html('恭喜你，注册成功~~~');
                         }
+                        else if (d.getret === -2) {
+                            if (d.username === 1) {
+                                $(".reg-info").removeClass('success').addClass('info').html('用户名已存在~');
+                            }
+                            if (d.useremail === 1) {
+                                $(".reg-info").removeClass('success').addClass('info').html('邮箱已存在~');
+                            }
+                            if (d.usermobile === 1) {
+                                $(".reg-info").removeClass('success').addClass('info').html('该手机号已经被注册~');
+                            }
+                        }
+                        else {
+                            $(".reg-info").removeClass('info').addClass('fail').html(d.getmsg);
+                        }
+                        setTimeout(()=> {
+                            $(".reg-info").removeClass('info success fail');
+                        }, 2000)
                     }
-                })
+                });
+
+
             });
 
             data.regBtn.on("click", ()=> {
@@ -880,7 +920,7 @@ window.addEventListener('load', ()=> {
                 }
             });
 
-          ///  data.regBtn.trigger('click')
+            ///  data.regBtn.trigger('click')
 
 
             data.regType.on('click', (e)=> {
@@ -899,16 +939,63 @@ window.addEventListener('load', ()=> {
                 $(this).removeClass('error');
                 $(this).find('input').trigger('focus');
             });
+
             $('.reg-input').on('focus', (e)=> {
-                $(e.target).parents('.fly-reg-input').removeClass('error');
-                $(e.target).val().length <= 0 && $(e.target).siblings('.mark').addClass('blur');
-            }).on('blur', (e)=> {
+                let $Target = $(e.target);
+                $Target.parents('.fly-reg-input').removeClass('error');
+                $Target.val().length <= 0 && $Target.siblings('.mark').addClass('blur')
+
+            });
+
+
+            $(".reg-input-company").on('blur', (e)=> {
+                if ($(e.target).val().trim().length <= 0 || $(e.target).val().trim().length > 18) {
+                    $(e.target).parents('.fly-reg-input').addClass("error");
+                    this.removeErrorInfo($(e.target).parents('.fly-reg-input'));
+                    successArr.remove("company");
+                }
+                else {
+                    successArr.add("company");
+                }
+
+                // $(e.target).val().length <= 0 && $(e.target).siblings('.mark').removeClass('blur');
+            });
+
+            let successArr = [];
+            window.successArr = successArr;
+            Array.prototype.remove = function (item) {
+                this.forEach((n, i)=> {
+                    if (n === item) {
+                        this.splice(i, 1);
+                        return;
+                    }
+                })
+            };
+
+            Array.prototype.add = function (item) {
+                let flag = false;
+                this.forEach((n, i)=> {
+                    if (n === item) {
+                        flag = true;
+                    }
+                });
+                if (!flag) {
+                    this.push(item);
+                }
+            };
+
+            $('input[name="reg-username"]').on('blur', (e)=> {
                 if ($(e.target).val().trim().length < 6 || $(e.target).val().trim().length > 18) {
                     $(e.target).parents('.fly-reg-input').addClass("error");
                     this.removeErrorInfo($(e.target).parents('.fly-reg-input'))
 
+                    successArr.remove("username");
                 }
-                $(e.target).val().length <= 0 && $(e.target).siblings('.mak').removeClass('blur');
+                else {
+                    successArr.add("username");
+                }
+
+                $(e.target).val().length <= 0 && $(e.target).siblings('.mark').removeClass('blur');
             });
 
             $('input[name="reg-pass"]').on('focus', (e)=> {
@@ -918,13 +1005,52 @@ window.addEventListener('load', ()=> {
                 if ($(e.target).val().trim().length < 6) {
                     $(e.target).parents('.fly-reg-input').addClass("error");
                     this.removeErrorInfo($(e.target).parents('.fly-reg-input'))
+
+                    successArr.remove("pass");
                 }
-                $(e.target).val().length <= 0 && $(e.target).siblings('.mark').removeClass('blur');
+                else {
+                    successArr.add("pass");
+                }
+
+                //$(e.target).val().length <= 0 && $(e.target).siblings('.mark').removeClass('blur');
             });
 
             $('.sure-pass').on('focus', (e)=> {
                 $(e.target).parents('.fly-reg-input').removeClass('error');
                 $(e.target).val().length <= 0 && $(e.target).siblings('.mark').addClass('blur');
+            }).on("blur", (e)=> {
+                if ($(e.target).val() === $('input[name="reg-pass"]').val()) {
+                    successArr.add("sure-pass");
+                }
+                else {
+                    successArr.remove("sure-pass");
+                    $(e.target).parents('.fly-reg-input').addClass("error");
+                    this.removeErrorInfo($(e.target).parents('.fly-reg-input'))
+                }
+            });
+
+            let pattern = /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/,
+                reg = /^0?1[3|4|5|8][0-9]\d{8}$/;
+            $('input[name="reg-email"]').on('focus', (e)=> {
+                $(e.target).parents('.fly-reg-input').removeClass('error');
+                $(e.target).val().length <= 0 && $(e.target).siblings('.mark').addClass('blur');
+            }).on('blur', (e)=> {
+                if (!pattern.test($(e.target).val().trim()) && !reg.test($(e.target).val().trim())) {
+
+                    $(e.target).parents('.fly-reg-input').addClass("error");
+                    this.removeErrorInfo($(e.target).parents('.fly-reg-input'))
+                    successArr.remove("email");
+                }
+                else {
+                    successArr.add("email");
+                }
+                $(e.target).val().length <= 0 && $(e.target).siblings('.mark').removeClass('blur');
+            });
+
+
+            $(".fly-input").on("blur", ()=> {
+
+                $('.btn-begin-reg')[successArr.length === (company === 1 ? 6 : 7) ? "removeClass" : "addClass"]('disabled')
             });
 
             $(".close").on('click', ()=> {
@@ -934,6 +1060,10 @@ window.addEventListener('load', ()=> {
             $(document).on('keydown', e=> {
                 e.keyCode === 27 && data.loginMask.removeClass('show');
             });
+
+        },
+
+        checkReg(){
 
         },
 
@@ -957,7 +1087,7 @@ window.addEventListener('load', ()=> {
 
 
         },
-        removeErrorInfo(obj,className='error'){
+        removeErrorInfo(obj, className = 'error'){
             setTimeout(()=> {
                 obj.removeClass(className);
             }, 2000)
@@ -1062,8 +1192,8 @@ window.addEventListener('load', ()=> {
                         isBack: true
                     })
                 }
-            }).on('keydown',(e)=>{
-                if(e.keyCode === 13){
+            }).on('keydown', (e)=> {
+                if (e.keyCode === 13) {
                     data.btnOK.trigger('mousedown');
                     data.btnOK.trigger('mouseup');
                 }

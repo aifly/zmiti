@@ -204,33 +204,33 @@
                            <section>
                                <div class="fly-reg-input ">
                                    <div class="error-msg">账号为6-18位数字和字母的组合</div>
-                                   <span class="fly-label">账号</span><span class="fly-v-line"></span><input  type="text" class="reg-input" name="reg-username"><label class="mark"></label>
+                                   <span class="fly-label">账号</span><span class="fly-v-line"></span><input  type="text" class="reg-input fly-input" name="reg-username"><label class="mark">请输入用户名</label>
                                </div>
                                <div class="fly-reg-input company hide">
                                    <div class="error-msg">公司名称不能为空</div>
-                                   <span class="fly-label">公司名称</span><span class="fly-v-line"></span><input type="text" class="reg-input-company" name="reg-company">
+                                   <span class="fly-label">公司名称</span><span class="fly-v-line"></span><input type="text" class="reg-input-company  fly-input" name="reg-company">
                                </div>
                                <div class="fly-reg-input ">
                                    <div class="error-msg">密码不能小于6位</div>
-                                   <span class="fly-label">设置密码</span><span class="fly-v-line"></span><input type="password"  name="reg-pass">
+                                   <span class="fly-label">设置密码</span><span class="fly-v-line"></span><input type="password"  name="reg-pass" class="fly-input">
                                </div>
                                <div class="fly-reg-input">
                                    <div class="error-msg">两次密码不一致</div>
-                                   <span class="fly-label">确认密码</span><span class="fly-v-line"></span><input type="password" class="sure-pass">
+                                   <span class="fly-label">确认密码</span><span class="fly-v-line"></span><input type="password" class="sure-pass  fly-input">
                                </div>
                                <div class="fly-reg-input no-border full-width">
                                    <div class="error-msg">手机号或者邮箱格式不正确</div>
-                                   <input type="text" class="sure-pass reg-input" name="reg-email"  ><label class="mark" style="left:2%;">请录入邮箱/手机号</label>
+                                   <input type="text" class=" reg-input  fly-input" name="reg-email"  ><label class="mark" style="left:2%;">请录入邮箱/手机号</label>
                                </div>
                                <div class="fly-reg-input no-border get-code">
-                                   <input type="text" class="sure-pass reg-input" name="reg-tel"><label style="left: 2%;" class="mark">请录入验证码</label><a href="javascript:void(0)" class="fly-get-code">获取验证码</a>
+                                   <input type="text" class="reg-input  fly-input" name="reg-tel"><label style="left: 2%;" class="mark">请录入验证码</label><a href="javascript:void(0)" class="fly-get-code">获取验证码</a>
                                </div>
 
                                <div class="fly-reg-input no-border  agree-clause">
                                    <input id="green" type="checkbox"><label  for="green">我已阅读并同意 <a href="#" class="clause">《智媒体平台服务条款》</a></label>
                                </div>
                                <div class="fly-reg-input no-border">
-                                   <button class="btn-begin-reg">立即注册</button>
+                                   <button class="btn-begin-reg disabled">立即注册</button>
                                </div>
                            </section>
                        </div>
@@ -240,16 +240,23 @@
                         <a href="javascript:void(0)" class="go-to-login">已有账号？直接登录>></a>
                     </div>
                 </div>
+                <div class="reg-info">正在注册...</div>
             </div>
+
+
         </div>
     </section>
 </div>
-
+<span id="keleyivisitorip" style="opacity: 0;z-index: -1;position:fixed;"></span>
 <script src="statices/js/createjs.js" ></script>
+
 <script src="./statices/js/index.js" onload="var loading =document.getElementById('loading') ;loading.parentNode.removeChild(loading);document.getElementById('main-ui').classList.add('active')"></script>
 
-<!--<script src="http://localhost:5000/index.js"  onload="var loading =document.getElementById('loading') ;loading.parentNode.removeChild(loading);document.getElementById('main-ui').classList.add('active')"></script>-->
+<!--
+<script src="http://localhost:5000/index.js"  onload="var loading =document.getElementById('loading') ;loading.parentNode.removeChild(loading);document.getElementById('main-ui').classList.add('active')"></script>
+-->
 
+<script type="text/javascript" src="http://tool.keleyi.com/ip/visitoriphost/"></script>
 
 </body>
 </html>

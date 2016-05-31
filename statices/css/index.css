@@ -223,6 +223,36 @@ body {
   transform: translate(-50%, -50%);
   overflow: hidden;
 }
+#fly-main .fly-login-mask .fly-login-container .reg-info {
+  position: absolute;
+  left: 0;
+  bottom: 0px;
+  -webkit-transition: -webkit-transform 0.2s;
+  transition: transform 0.2s;
+  height: 28px;
+  line-height: 28px;
+  width: 100%;
+  text-align: center;
+  font-size: 14px;
+  color: #fff;
+  -webkit-transform: translate3d(0, 30px, 0);
+  transform: translate3d(0, 30px, 0);
+}
+#fly-main .fly-login-mask .fly-login-container .success {
+  background: green;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+#fly-main .fly-login-mask .fly-login-container .fail {
+  background: #a40b16;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+#fly-main .fly-login-mask .fly-login-container .info {
+  background: yellowgreen;
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
 #fly-main .fly-login-mask .fly-login-container .fly-login-box,
 #fly-main .fly-login-mask .fly-login-container .fly-reg-box {
   width: 100%;
@@ -626,6 +656,10 @@ body {
   position: absolute;
   cursor: pointer;
 }
+#fly-main .fly-login-mask .fly-login-container .fly-reg-box button.btn-begin-reg.disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
 #fly-main .fly-login-mask .fly-login-container .fly-reg-box .go-login {
   width: 95%;
   text-align: right;
@@ -900,4 +934,10 @@ body {
   position: absolute;
   left: 0;
   top: 0;
+}
+.reg-info {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
 }
