@@ -739,7 +739,8 @@ window.addEventListener('load', ()=> {
                             var a = document.createElement('a');
                             document.body.appendChild(a);
 
-                            a.href = 'http://localhost:3000/index.html';
+                            //a.href = 'http://localhost:3000/index.html';
+                            a.href = 'http://www.zmiti.com/server/';
                             a.style.position = 'fixed';
                             a.style.zIndex = -1;
                             a.style.opacity = 0;
